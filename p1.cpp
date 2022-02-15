@@ -36,6 +36,5 @@ int main (){
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
-    ///
-
+    cout<<"Altura del arbol: "<<endl;
 }
