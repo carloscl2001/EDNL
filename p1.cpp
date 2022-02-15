@@ -17,8 +17,6 @@ int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
         return 1 + nNodos_Rec(arbol, arbol.hijoIzqdo(n)) + nNodos_Rec(arbol, arbol.hijoDrcho(n));
     }
 }
-//ejemplo de tu cara
-cout<<"hola "<<endl;
 
 using namespace std;
 typedef char tElto;
@@ -38,4 +36,6 @@ int main (){
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
+    ///
+
 }
