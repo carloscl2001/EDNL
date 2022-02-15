@@ -18,6 +18,7 @@ int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
     }
 }
 //ejemplo de tu cara
+cout<<"hola "<<endl;
 
 using namespace std;
 typedef char tElto;
