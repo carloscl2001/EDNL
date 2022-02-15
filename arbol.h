@@ -444,5 +444,5 @@ Abin<T>::~Abin()//destructor
 {
 	destructor(r);
 }
-
+//
 #endif
