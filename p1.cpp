@@ -38,4 +38,5 @@ int main (){
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
     cout<<"Altura del arbol: "<<endl;
     //hello that
+    //ordenador
 }
