@@ -37,4 +37,5 @@ int main (){
     imprimirAbin(B); // En std::cout
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
     cout<<"Altura del arbol: "<<endl;
+    //hello that
 }
