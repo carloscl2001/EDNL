@@ -3,6 +3,7 @@
 #include "arbol.h"
 #include "abin_E-S.h"
 
+//ejercicio 1
 template <typename T>
 int nNodos(Abin<T> arbol)
 {
@@ -13,10 +14,13 @@ int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
     if(n == Abin<T>::NODO_NULO)
     {
         return 0;
+        cout<<arbol.T& elemento(n)<<endl;
     }else{
+        cout<<arbol.T& elemento(n)<<endl;
         return 1 + nNodos_Rec(arbol, arbol.hijoIzqdo(n)) + nNodos_Rec(arbol, arbol.hijoDrcho(n));
     }
 }
+
 
 using namespace std;
 typedef char tElto;
@@ -35,9 +39,10 @@ int main (){
     fe.close();
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
+    cout<<"-------------------------------------"<<endl;
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
-    cout<<"Altura del arbol: "<<endl;
-    //hello that
+    cout<<"-------------------------------------"<<endl;
+    cout<<"Altura del arbol: "<<altura(A)<<endl;
     //ordenador
     //final
 }
