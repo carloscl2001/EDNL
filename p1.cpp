@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <fstream> 
 #include "arbol.h"
 #include "abin_E-S.h"
@@ -14,10 +15,28 @@ int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
     if(n == Abin<T>::NODO_NULO)
     {
         return 0;
-        cout<<arbol.T& elemento(n)<<endl;
+        //cout<<"elemento del ndodo"<<arbol.elemento(n)<<endl;
     }else{
-        cout<<arbol.T& elemento(n)<<endl;
+        //cout<<"elemento del nodo"<<arbol.elemento(n)<<endl;
         return 1 + nNodos_Rec(arbol, arbol.hijoIzqdo(n)) + nNodos_Rec(arbol, arbol.hijoDrcho(n));
+    }
+}
+
+//ejercicio2
+template <typename T>
+int altura(Abin<T> arbol)
+{
+    return nNodos_Rec(arbol,arbol.raiz());
+}
+template <typename T>
+int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
+    if(n == Abin<T>::NODO_NULO)
+    {
+        return -1;
+        cout<<"elemento del ndodo"<<arbol.elemento(n)<<endl;
+    }else{
+        cout<<"elemento del nodo"<<arbol.elemento(n)<<endl;
+        return 1 + max(alturaRec(arbol, arbol.hijoIzqdo(n)), alturaRec(arbol, arbol.hijoDrcho(n)));
     }
 }
 
@@ -42,7 +61,7 @@ int main (){
     cout<<"-------------------------------------"<<endl;
     cout<<"Numero de nodos: "<<nNodos(A)<<endl;
     cout<<"-------------------------------------"<<endl;
-    cout<<"Altura del arbol: "<<altura(A)<<endl;
+    cout<<"Altura de arbol: "<<altura(A)<<endl;
     //ordenador
     //final
 }
