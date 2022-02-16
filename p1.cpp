@@ -46,6 +46,7 @@ using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
 int main (){
+    
     Abin<tElto> A, B;
     cout << "*** Lectura del arbol binario A ***\n";
     rellenarAbin(A, fin); // Desde std::cin
@@ -59,8 +60,8 @@ int main (){
     fe.close();
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
-    cout<<"-----------------EJ1--------------------"<<endl;
+    cout<<"--------------------EJ1--------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
-    cout<<"-----------------EJ2--------------------"<<endl;
+    cout<<"--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
 }
