@@ -1,9 +1,10 @@
 #include <iostream>
+#include <cstdlib>
 #include <algorithm>
 #include <fstream> 
 #include "arbol.h"
 #include "abin_E-S.h"
-/*
+
 //ejercicio 1
 template <typename T>
 int nNodos(Abin<T> arbol)
@@ -21,25 +22,21 @@ int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
         return 1 + nNodos_Rec(arbol, arbol.hijoIzqdo(n)) + nNodos_Rec(arbol, arbol.hijoDrcho(n));
     }
 }
-*/
 
 //ejercicio2
 template <typename T>
 int altura(Abin<T> arbol)
 {
-    return nNodos_Rec(arbol,arbol.raiz());
+    return alturaRec(arbol,arbol.raiz());
 }
 template <typename T>
 int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
-    cout<<"0"<<endl;
+    using namespace std;
     if(n == Abin<T>::NODO_NULO)
     {
         return -1;
-        cout<<"1"<<endl;
-        cout<<"elemento del nodo: "<<arbol.elemento(n)<<endl;
-    }else{
-        cout<<"2"<<endl;
-        cout<<"elemento del nodo: "<<arbol.elemento(n)<<endl;
+    }
+    else{
         return 1 + max(alturaRec(arbol, arbol.hijoIzqdo(n)), alturaRec(arbol, arbol.hijoDrcho(n)));
     }
 }
@@ -62,10 +59,8 @@ int main (){
     fe.close();
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
-    //cout<<"-------------------------------------"<<endl;
-    //cout<<"Numero de nodos: "<<nNodos(A)<<endl;
-    cout<<"-------------------------------------"<<endl;
-    cout<<"Altura de arbol: "<<altura(A)<<endl;
-    //ordenador
-    //final
+    cout<<"-----------------EJ1--------------------"<<endl;
+    cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
+    cout<<"-----------------EJ2--------------------"<<endl;
+    cout<<"\tAltura de arbol: "<<altura(A)<<endl;
 }
