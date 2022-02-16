@@ -33,9 +33,9 @@ int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
     if(n == Abin<T>::NODO_NULO)
     {
         return -1;
-        cout<<"elemento del ndodo"<<arbol.elemento(n)<<endl;
+        cout<<"elemento del nodo: "<<arbol.elemento(n)<<endl;
     }else{
-        cout<<"elemento del nodo"<<arbol.elemento(n)<<endl;
+        cout<<"elemento del nodo: "<<arbol.elemento(n)<<endl;
         return 1 + max(alturaRec(arbol, arbol.hijoIzqdo(n)), alturaRec(arbol, arbol.hijoDrcho(n)));
     }
 }
