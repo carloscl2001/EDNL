@@ -40,7 +40,22 @@ int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
         return 1 + max(alturaRec(arbol, arbol.hijoIzqdo(n)), alturaRec(arbol, arbol.hijoDrcho(n)));
     }
 }
+//ejercicio3
+template <typename T>
+int prof(Abin<T> arbol, typename Abin<T>::nodo n){
+    return profRec(arbol,n);
+}
 
+template <typename T>
+int profRec(Abin<T> arbol, typename Abin<T>::nodo n){
+    if(n == arbol.raiz())
+    {
+        return 0;
+    }
+    else{
+        return 1 + profRec(arbol, arbol.padre(n));
+    }
+}
 
 using namespace std;
 typedef char tElto;
@@ -64,4 +79,6 @@ int main (){
     cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
     cout<<"--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
+    cout<<"--------------------EJ3--------------------"<<endl;
+    cout<<"\tProfundiad del nodo: "<<prof(A,A.hijoIzqdo(A.hijoIzqdo(A.raiz())))<<endl;
 }
