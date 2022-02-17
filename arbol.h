@@ -429,14 +429,13 @@ int Abin<T>::altura(nodo n)
 	
 	if( n != NODO_NULO )
 	{
-	
 		ramaA = 1 + altura(n->hizq);
 		ramaB = 1 + altura(n->hder);
 		
 		return (ramaA > ramaB) ? ramaA : ramaB;
 	}
 			
-return -1;
+	return -1;
 }
 
 template <typename T>

@@ -32,7 +32,7 @@ int altura(Abin<T> arbol)
 template <typename T>
 int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
     using namespace std;
-    if(n == Abin<T>::NODO_NULO)
+    if(n == Abin<T>::NODO_NULO) 
     {
         return -1;
     }
@@ -48,9 +48,11 @@ int prof(Abin<T> arbol, typename Abin<T>::nodo n){
 
 template <typename T>
 int profRec(Abin<T> arbol, typename Abin<T>::nodo n){
-    if(n == arbol.raiz())
+    
+    //!if(n == arbol.raiz())
+    if(n == Abin<T>::NODO_NULO)
     {
-        return 0;
+        return -1;
     }
     else{
         return 1 + profRec(arbol, arbol.padre(n));
@@ -81,4 +83,5 @@ int main (){
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
     cout<<"--------------------EJ3--------------------"<<endl;
     cout<<"\tProfundiad del nodo: "<<prof(A,A.hijoIzqdo(A.hijoIzqdo(A.raiz())))<<endl;
+    cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
 }
