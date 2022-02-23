@@ -7,52 +7,61 @@
 
 //ejercicio 1
 template <typename T>
-int nNodos(Abin<T> arbol)
+int nNodos(Abin<T> A)
 {
-    return nNodos_Rec(arbol,arbol.raiz());
+    return nNodos_Rec(A.raiz(), A);
 }
 
 template <typename T>
-int nNodos_Rec(Abin<T> arbol, typename  Abin<T>::nodo n){
+int nNodos_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
     if(n == Abin<T>::NODO_NULO)
     {
         return 0;
-        //cout<<"elemento del ndodo"<<arbol.elemento(n)<<endl;
+        //cout<<"elemento del ndodo"<<A.elemento(n)<<endl;
     }else{
-        //cout<<"elemento del nodo"<<arbol.elemento(n)<<endl;
-        return 1 + nNodos_Rec(arbol, arbol.hijoIzqdo(n)) + nNodos_Rec(arbol, arbol.hijoDrcho(n));
+        //cout<<"elemento del nodo"<<A.elemento(n)<<endl;
+        return 1 + nNodos_Rec(A.hijoIzqdo(n), A) + nNodos_Rec(A.hijoDrcho(n), A);
     }
 }
 
 //ejercicio2
 template <typename T>
-int altura(Abin<T> arbol)
+int altura(Abin<T>& A)
 {
-    return alturaRec(arbol,arbol.raiz());
+    return alturaRec(A.raiz(), A);
 }
 template <typename T>
-int alturaRec(Abin<T> arbol, typename  Abin<T>::nodo n){
+int alturaRec(typename  Abin<T>::nodo n, const Abin<T>& A){
     using namespace std;
     if(n == Abin<T>::NODO_NULO) 
     {
         return -1;
     }
     else{
-        return 1 + max(alturaRec(arbol, arbol.hijoIzqdo(n)), alturaRec(arbol, arbol.hijoDrcho(n)));
+        return 1 + max(alturaRec(A.hijoIzqdo(n), A), alturaRec(A.hijoDrcho(n), A));
     }
 }
-//ejercicio3
+
+
+
+
+//*ejercicio3
 template <typename T>
-int profNodoAbin(Abin<T> arbol, typename Abin<T>::nodo n){
-    
-    //*if(n == arbol.raiz()) return 0;
-    if(n == Abin<T>::NODO_NULO)
+int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
+
+    if(n == A.raiz())
+    {
+        return 0;
+    }
+    /*if(n == Abin<T>::NODO_NULO)1
     {
         return -1;
     }
+    */
     else{
-        return 1 + profNodoAbin(arbol, arbol.padre(n));
+        return 1 + profNodoAbin(A.padre(n), A);
     }
+
 }
 
 using namespace std;
@@ -78,6 +87,7 @@ int main (){
     cout<<"--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
     cout<<"--------------------EJ3--------------------"<<endl;
-    cout<<"\tProfundiad del nodo: "<<profNodoAbin(A,A.hijoIzqdo(A.hijoIzqdo(A.raiz())))<<endl;
+    cout<<"\tProfundiad del nodo: "<<profNodoAbin(A.hijoIzqdo(A.hijoIzqdo(A.raiz())),A)<<endl;
+    cout<<"--------------------EJ4--------------------"<<endl;
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
 }
