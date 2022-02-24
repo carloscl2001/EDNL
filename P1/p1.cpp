@@ -5,7 +5,7 @@
 #include "arbol.h"
 #include "abin_E-S.h"
 
-//ejercicio 1
+//*ejercicio 1
 template <typename T>
 int nNodos(Abin<T> A)
 {
@@ -24,7 +24,7 @@ int nNodos_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
     }
 }
 
-//ejercicio2
+//*ejercicio2
 template <typename T>
 int altura(Abin<T>& A)
 {
