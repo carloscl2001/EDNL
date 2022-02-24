@@ -53,7 +53,7 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
     {
         return 0;
     }
-    /*if(n == Abin<T>::NODO_NULO)1
+    /*if(n == Abin<T>::NODO_NULO)
     {
         return -1;
     }
@@ -61,7 +61,6 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
     else{
         return 1 + profNodoAbin(A.padre(n), A);
     }
-
 }
 
 using namespace std;
