@@ -49,18 +49,13 @@ int alturaRec(typename  Abin<T>::nodo n, const Abin<T>& A){
 template <typename T>
 int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
 
-    if(n == A.raiz())
-    {
-        return 0;
-    }
+    if(n == A.raiz()) return 0;
     /*if(n == Abin<T>::NODO_NULO)
     {
         return -1;
     }
     */
-    else{
-        return 1 + profNodoAbin(A.padre(n), A);
-    }
+    else return 1 + profNodoAbin(A.padre(n), A);
 }
 
 using namespace std;
