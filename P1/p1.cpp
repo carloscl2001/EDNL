@@ -58,6 +58,11 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
     else return 1 + profNodoAbin(A.padre(n), A);
 }
 
+//|ejercicio4
+//todo hacer este ejericio
+//? en caso de duda preguntar a pedro
+//! atencion este ejercicio es importante
+//* viva VOX
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
