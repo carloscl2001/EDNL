@@ -57,7 +57,8 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
     */
     else return 1 + profNodoAbin(A.padre(n), A);
 }
-
+//|enunciado
+//$halo
 //todo hacer este ejericio
 //? en caso de duda preguntar a pedro
 //! atencion este ejercicio es importante
