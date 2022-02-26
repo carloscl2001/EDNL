@@ -5,7 +5,8 @@
 #include "arbol.h"
 #include "abin_E-S.h"
 
-//|ejercicio 1
+
+//=>jercicio 1
 template <typename T>
 int nNodos(Abin<T> A)
 {
@@ -24,7 +25,8 @@ int nNodos_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
     }
 }
 
-//|ejercicio2
+
+//=>ejercicio2
 template <typename T>
 int altura(Abin<T>& A)
 {
@@ -43,9 +45,7 @@ int alturaRec(typename  Abin<T>::nodo n, const Abin<T>& A){
 }
 
 
-
-
-//|ejercicio3
+//=>ejercicio3
 template <typename T>
 int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
 
@@ -57,12 +57,8 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
     */
     else return 1 + profNodoAbin(A.padre(n), A);
 }
-//|enunciado
-//$halo
-//todo hacer este ejericio
-//? en caso de duda preguntar a pedro
-//! atencion este ejercicio es importante
-//* viva VOX
+
+
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
