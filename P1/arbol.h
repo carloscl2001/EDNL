@@ -220,8 +220,8 @@ template <typename T> class Abin
 		static const nodo NODO_NULO;
 		Abin();//Constructor
 		
-		int profundidad(nodo n);
-		int altura(nodo n);
+		int profundidad(nodo n) const;
+		int altura(nodo n) const;
 		
 		
 		void insertarRaiz(const T& e);
@@ -411,7 +411,7 @@ void Abin<T>::destructor(nodo& n)
 }
 
 template <typename T>
-int Abin<T>::profundidad(nodo n)
+int Abin<T>::profundidad(nodo n) const
 {
 	
 	if( n != NODO_NULO && n != r )
@@ -423,7 +423,7 @@ return 0;
 }
 
 template <typename T>
-int Abin<T>::altura(nodo n)
+int Abin<T>::altura(const nodo n) const
 {
 	int ramaA = 0, ramaB = 0;
 	

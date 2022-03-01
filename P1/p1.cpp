@@ -59,6 +59,16 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
 }
 
 
+//=>ejercicio6
+template <typename T>
+int niveldesqAbin(const Abin<T>& A){
+    int h1,h2 = 0;
+    h1 = A.altura(A.hijoIzqdo(A.raiz()));
+    h2 = A.altura(A.hijoDrcho(A.raiz()));
+
+    return h1 - h2;
+}
+
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
@@ -85,4 +95,6 @@ int main (){
     cout<<"\tProfundiad del nodo: "<<profNodoAbin(A.hijoIzqdo(A.hijoIzqdo(A.raiz())),A)<<endl;
     cout<<"--------------------EJ4--------------------"<<endl;
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
+    cout<<"--------------------EJ6--------------------"<<endl;
+    cout<<"\tDesequilibrio del arbol: "<<niveldesqAbin(A)<<endl;
 }
