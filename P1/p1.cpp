@@ -62,11 +62,41 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
 //=>ejercicio6
 template <typename T>
 int niveldesqAbin(const Abin<T>& A){
+    
     int h1,h2 = 0;
     h1 = A.altura(A.hijoIzqdo(A.raiz()));
     h2 = A.altura(A.hijoDrcho(A.raiz()));
 
     return h1 - h2;
+}
+
+//=>ejercicio7
+template <typename T>
+bool pseudoAbin(Abin<T>& A){
+
+    return pseudoAbinRec(A.raiz(),A);
+}
+
+template <typename T>
+bool pseudoAbinRec(typename Abin<T>::nodo n, Abin<T>& A){
+    int hAbin = 0;
+    Abin<T>::nodo n2;
+    hAbin = altura(A);
+
+    if (A.altura(n) == hAbin)
+    {
+        if ( n = Abin<T>::NODO_NULO)
+        {
+            n2 = A.hijoIzqdo(n);
+
+        }
+
+    }
+    else{
+    
+        pseudoAbinRec(A.hijoIzqdo(n), A);
+        pseudoAbinRec(A.hijoDrcho(n), A);
+    }
 }
 
 using namespace std;
@@ -97,4 +127,6 @@ int main (){
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
     cout<<"--------------------EJ6--------------------"<<endl;
     cout<<"\tDesequilibrio del arbol: "<<niveldesqAbin(A)<<endl;
+    cout<<"--------------------EJ7--------------------"<<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
 }
