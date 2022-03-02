@@ -67,18 +67,16 @@ int desequilibrio(const Abin<T>& A){
 
 template <typename T>
 int desequilibrio_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
-    int dn, dh = 0;
     if (n == Abin<T>::NODO_NULO) return 0;
 
     else{
-        dh = alturaRec(A.hijoIzqdo(n),A) - alturaRec(A.hijoDrcho(n),A);
-        dn = std::max(desequilibrio_Rec(A.hijoIzqdo(n),A),desequilibrio_Rec(A.hijoDrcho(n),A), dh);
-        return std::max(dn, dh);
+        return std::max(abs(alturaRec(A.hijoIzqdo(n), A) - alturaRec(A.hijoDrcho(n), A)),std::max(desequilibrio_Rec(A.hijoIzqdo(n), A), desequilibrio_Rec(A.hijoDrcho(n), A))
+        );
     }
 }
 
 
-/*
+
 //=>ejercicio7 
 template <typename T>
 bool pseudoAbin(Abin<T>& A){
@@ -91,7 +89,7 @@ bool pseudoAbinRec(typename Abin<T>::nodo n, Abin<T>& A)
 {
    
 }
-*/
+
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
@@ -120,6 +118,6 @@ int main (){
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
     cout<<"--------------------EJ6--------------------"<<endl;
     cout<<"\tDesequilibrio del arbol: "<<desequilibrio(A)<<endl;
-    //cout<<"--------------------EJ7--------------------"<<endl;
-    //cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
+    cout<<"--------------------EJ7--------------------"<<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
 }
