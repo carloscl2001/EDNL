@@ -62,9 +62,11 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
 //=>ejercicio6
 template <typename T>
 int niveldesqAbin(const Abin<T>& A){
-    
+    return niveldesqAbin_Rec(nodo n,const Abin<T>& A)
 }
 
+template <typename T>
+int niveldesqAbin_Rec(nodo n,const Abin<T>& A){}
 //=>ejercicio7 
 template <typename T>
 bool pseudoAbin(Abin<T>& A){
