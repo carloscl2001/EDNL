@@ -76,7 +76,7 @@ int desequilibrio_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
 }
 
 
-/*
+
 //=>ejercicio7 
 template <typename T>
 bool pseudoAbin(Abin<T>& A){
@@ -87,9 +87,25 @@ bool pseudoAbin(Abin<T>& A){
 template <typename T>
 bool pseudoAbinRec(typename Abin<T>::nodo n, Abin<T>& A)
 {
-   
+   if(alturaRec(n,A) == 1)
+   {
+       return (nNodos_Rec(n,A) != 1);
+   }
+   else
+   {
+       if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
+       {
+           return pseudoAbinRec(A.hijoDrcho(n),A);
+       }
+        else
+        {
+            return (pseudoAbinRec(A.hijoIzqdo(n),A) && pseudoAbinRec(A.hijoDrcho(n),A));
+        }
+   }
 }
-*/
+
+//=>ejercicio7B
+
 
 using namespace std;
 typedef char tElto;
@@ -120,5 +136,5 @@ int main (){
     cout<<"--------------------EJ6--------------------"<<endl;
     cout<<"\tDesequilibrio del arbol: "<<desequilibrio(A)<<endl;
     cout<<"--------------------EJ7--------------------"<<endl;
-    //cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
 }
