@@ -79,13 +79,13 @@ int desequilibrio_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
 
 //=>ejercicio7 
 template <typename T>
-bool pseudoAbin(Abin<T>& A){
+bool pseudoAbinA(Abin<T>& A){
 
-    return pseudoAbinRec(A.raiz(),A);
+    return pseudoAbinARec(A.raiz(),A);
 }
 
 template <typename T>
-bool pseudoAbinRec(typename Abin<T>::nodo n, Abin<T>& A)
+bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A)
 {
    if(alturaRec(n,A) == 1)
    {
@@ -95,22 +95,36 @@ bool pseudoAbinRec(typename Abin<T>::nodo n, Abin<T>& A)
    {
        if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
        {
-           return pseudoAbinRec(A.hijoDrcho(n),A);
+           return pseudoAbinARec(A.hijoDrcho(n),A);
        }
         else
         {
-            return (pseudoAbinRec(A.hijoIzqdo(n),A) && pseudoAbinRec(A.hijoDrcho(n),A));
+            return (pseudoAbinARec(A.hijoIzqdo(n),A) && pseudoAbinARec(A.hijoDrcho(n),A));
         }
    }
 }
 
+
 //=>ejercicio7B
+template <typename T>
+bool pseudoAbinB(Abin<T>& A)
+{
+    return pseudoAbinBRec(A.raiz(),A);
+}
+
+template <typename T>
+bool pseudoAbinBRec(typename Abin<T>::nodo n, const Abin<T>& A)
+{
+
+}
 
 
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
 int main (){
+
+    int a = 10;
     
     Abin<tElto> A, B;
     cout << "*** Lectura del arbol binario A ***\n";
@@ -135,6 +149,9 @@ int main (){
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
     cout<<"--------------------EJ6--------------------"<<endl;
     cout<<"\tDesequilibrio del arbol: "<<desequilibrio(A)<<endl;
-    cout<<"--------------------EJ7--------------------"<<endl;
-    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbin(A)<<endl;
+    cout<<"--------------------EJ7/A--------------------"<<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
+    cout<<"--------------------EJ7/B--------------------"<<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;\
+    cout<< a += -5 <<endl;
 }
