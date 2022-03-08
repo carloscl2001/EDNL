@@ -115,7 +115,10 @@ bool pseudoAbinB(Abin<T>& A)
 template <typename T>
 bool pseudoAbinBRec(typename Abin<T>::nodo n, const Abin<T>& A)
 {
-
+    if ( n == Abin<T>::NODO_NULO)
+    {
+        if
+    }
 }
 
 
@@ -152,6 +155,5 @@ int main (){
     cout<<"--------------------EJ7/A--------------------"<<endl;
     cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
     cout<<"--------------------EJ7/B--------------------"<<endl;
-    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;\
-    cout<< a += -5 <<endl;
+    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;
 }
