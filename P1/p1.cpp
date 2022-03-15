@@ -104,14 +104,13 @@ bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A)
    }
 }
 
-
+/*
 //=>ejercicio7B
 template <typename T>
 bool pseudoAbinB(Abin<T>& A)
 {
     return pseudoAbinBRec(A.raiz(),A);
 }
-
 template <typename T>
 bool pseudoAbinBRec(typename Abin<T>::nodo n, const Abin<T>& A)
 {
@@ -120,7 +119,7 @@ bool pseudoAbinBRec(typename Abin<T>::nodo n, const Abin<T>& A)
         if
     }
 }
-
+*/
 
 using namespace std;
 typedef char tElto;
@@ -155,5 +154,5 @@ int main (){
     cout<<"--------------------EJ7/A--------------------"<<endl;
     cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
     cout<<"--------------------EJ7/B--------------------"<<endl;
-    cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;
+    //cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;
 }
