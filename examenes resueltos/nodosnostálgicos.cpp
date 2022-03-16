@@ -10,7 +10,7 @@ int nNodosAnte(typename Abin<T>::nodo n,const Abin<T>& A)
 {
     if(n == Abin<T>::NODO_NULO)
     {
-        return 0;
+        return -1;
     }
     else
     {
