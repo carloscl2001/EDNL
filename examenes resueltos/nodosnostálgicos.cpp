@@ -6,13 +6,41 @@
 #include "abin_E-S.h"
 
 template <typename T>
-int nNodosNostal(Abin<T>& A)
+int nNodosAnte(typename Abin<T>::nodo n,const Abin<T>& A)
 {
-    return nNodosNostal_Rec(Abin<T>& A, typename Abin<T>::NODO_NULO)
+    if(n == Abin<T>::NODO_NULO)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + nNodosAnte(A.padre(n),A);
+    }
 }
 
 template <typename T>
-int nNodosNostal_Rec(Abin<T>& A, typename Abin<T>::NODO_NULO)
+int nNodosDesc(typename Abin<T>::nodo n,const Abin<T>& A)
+{
+    if(n == Abin<T>::NODO_NULO)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + nNodosDesc(A.hijoIzqdo(n),A) + nNodosDesc(A.hijoDrcho(n),A);
+    }
+
+}
+
+
+template <typename T>
+int nNodosNostal(const Abin<T>& A)
+{
+    return nNodosNostal_Rec(A.raiz(),A);
+}
+
+template <typename T>
+int nNodosNostal_Rec(typename Abin<T>::nodo n,const Abin<T>& A)
 {
     if (n == Abin<T>::NODO_NULO)
     {
@@ -20,7 +48,14 @@ int nNodosNostal_Rec(Abin<T>& A, typename Abin<T>::NODO_NULO)
     }
     else
     {
-        if()
+        if(nNodosAnte(n,A) > nNodosDesc(n,A))
+        {
+            return 1 + nNodosNostal_Rec(A.hijoIzqdo(n),A) + nNodosNostal_Rec(A.hijoDrcho(n),A);
+        }
+        else
+        {
+            return nNodosNostal_Rec(A.hijoIzqdo(n),A) + nNodosNostal_Rec(A.hijoDrcho(n),A);
+        }
     }
 }
 
@@ -43,6 +78,6 @@ int main(){
     fe.close();
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
-    cout<<"-------------------- NODO VERDES CON 3 NIETOS --------------------"<<endl;
+    cout<<"-------------------- NODO NOSTALGICO --------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodosNostal(A)<<endl;
 }
