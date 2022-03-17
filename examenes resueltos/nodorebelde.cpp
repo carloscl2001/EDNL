@@ -5,39 +5,46 @@
 #include "arbol.h"
 #include "abin_E-S.h"
 
-bool rebelde(typename Abin<bool>::nodo n, const Abin<bool>& A)
-{
-
+template <typename T>
+int rebelde2(typename Abin<T>::nodo n,const T elemento, const Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO){
+        return 1;
+    }
+    else{
+        if(elemento != A.elemento(n))
+        {
+            return 1 + rebelde2(A.padre(n),elemento,A);
+        }
+        else{
+            return -1 + rebelde2(A.padre(n),elemento,A);
+        }
+    }
 }
 
-
-int nNodosRebel(const Abin<bool>& A)
+template <typename T>
+int nNodosRebel(const Abin<T>& A)
 {
-    return nNodosRebelRec(A.raiz(),A);
+    return nNodosRebel_Rec(A.raiz(),A);
 }
 
-
-int nNodosRebelRec(typename Abin<bool>::nodo n, const Abin<bool>& A)
+template <typename T>
+int nNodosRebel_Rec(typename Abin<T>::nodo n, const Abin<T>& A)
 {
-    if(n == Abin<bool>::NODO_NULO)
-    {
+    if(n == Abin<T>::NODO_NULO){
         return 0;
     }
-    else
-    {
-        if(rebelde(n,A))
-        {
-            return 1 + nNodosRebelRec(A.hijoIzqdo(n),A) + nNodosRebelRec(A.hijoDrcho(n),A);
+    else{
+        if(rebelde2(n,A.elemento(n),A) > 0){
+            return 1 + nNodosRebel_Rec(A.hijoIzqdo(n),A) + nNodosRebel_Rec(A.hijoDrcho(n),A);
         }
-        else
-        {
-            return 0 + nNodosRebelRec(A.hijoIzqdo(n),A) + nNodosRebelRec(A.hijoDrcho(n),A);
+        else{
+            return 0 + nNodosRebel_Rec(A.hijoIzqdo(n),A) + nNodosRebel_Rec(A.hijoDrcho(n),A);
         }
     }
 }
 
 using namespace std;
-typedef bool tElto;
+typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
 int main(){
     

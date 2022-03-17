@@ -48,7 +48,7 @@ int nNodosNostal_Rec(typename Abin<T>::nodo n,const Abin<T>& A)
     }
     else
     {
-        if(nNodosAnte(n,A) > nNodosDesc(n,A))
+        if(nNodosAnte(n,A) > nNodosDesc(n,A) - 1)
         {
             return 1 + nNodosNostal_Rec(A.hijoIzqdo(n),A) + nNodosNostal_Rec(A.hijoDrcho(n),A);
         }
@@ -80,4 +80,5 @@ int main(){
     imprimirAbin(B); // En std::cout
     cout<<"-------------------- NODO NOSTALGICO --------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodosNostal(A)<<endl;
+    cout<<"-------------------- NUMERO DE SUCESORES --------------------"<<endl;
 }
