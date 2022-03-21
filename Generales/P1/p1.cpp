@@ -76,7 +76,6 @@ int desequilibrio_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
 }
 
 
-
 //=>ejercicio7 
 template <typename T>
 bool pseudoAbinA(Abin<T>& A){
@@ -118,7 +117,6 @@ Abin<T> reflexAbin(const Abin<T>& A)
         reflexAbin_Rec(A.raiz(),C.raiz(),A,C);
         return C;
     }
-    
 }
 
 template <typename T>
