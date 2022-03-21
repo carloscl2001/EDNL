@@ -120,17 +120,29 @@ Abin<T> reflexAbin(const Abin<T>& A)
 }
 
 template <typename T>
-void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, Abin<T> C)
+void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, Abin<T>& C)
 {
     if(n != Abin<T>::NODO_NULO){
-        if( A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
+        if((A.hijoIzqdo(n) != Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO) || (A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) != Abin<T>::NODO_NULO)){
+            if( A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
             C.insertarHijoDrcho(m,A.elemento(A.hijoIzqdo(n)));
             reflexAbin_Rec(A.hijoIzqdo(n),A.hijoDrcho(m),A,C);
             
+            }
+            if( A.hijoDrcho(n) != Abin<T>::NODO_NULO){
+                C.insertarHijoIzqdo(m,A.elemento(A.hijoDrcho(n)));
+                reflexAbin_Rec(A.hijoDrcho(n),A.hijoIzqdo(m),A,C);
+            }
         }
-        if( A.hijoDrcho(n) != Abin<T>::NODO_NULO){
-            C.insertarHijoIzqdo(m,A.elemento(A.hijoDrcho(n)));
-            reflexAbin_Rec(A.hijoDrcho(n),A.hijoIzqdo(m),A,C);
+        else{
+            if( A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
+                C.insertarHijoIzqdo(m,A.elemento(A.hijoIzqdo(n)));
+                reflexAbin_Rec(A.hijoIzqdo(n),A.hijoIzqdo(m),A,C);
+            }
+            if( A.hijoDrcho(n) != Abin<T>::NODO_NULO){
+                C.insertarHijoDrcho(m,A.elemento(A.hijoDrcho(n)));
+                reflexAbin_Rec(A.hijoDrcho(n),A.hijoDrcho(m),A,C);
+            }
         }
     }
 }
@@ -170,6 +182,6 @@ int main (){
     cout<<"--------------------EJ7--------------------"<<endl;
     cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
     */
-    cout<<"--------------------EJ8--------------------"<<endl;
+    cout<<"--------------------EJ8//solo cambia los nodos con 1 hijo--------------------"<<endl;
     imprimirAbin(reflexAbin(A));
 }
