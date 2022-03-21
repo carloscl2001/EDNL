@@ -216,6 +216,5 @@ int main (){
     cout<<"--------------------EJ8//solo cambia los nodos con 1 hijo--------------------"<<endl;
     imprimirAbin(reflexAbin(A));
     cout<<"--------------------EJ9--------------------"<<endl;
-    cout<<
 
 }
