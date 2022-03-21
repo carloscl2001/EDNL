@@ -133,7 +133,6 @@ void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Ab
         if( A.hijoDrcho(n) != Abin<T>::NODO_NULO){
             C.insertarHijoIzqdo(m,A.elemento(A.hijoDrcho(n)));
             reflexAbin_Rec(A.hijoDrcho(n),A.hijoIzqdo(m),A,C);
-            
         }
     }
 }
