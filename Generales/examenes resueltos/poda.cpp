@@ -6,13 +6,13 @@
 #include "abin_E-S.h"
 
 template <typename T>
-void poda_Rec(typename Abin<T>::nodo n, Abin<T>& A,const typename Abin<T>::nodo ori){
+void podaAbin_Rec(typename Abin<T>::nodo n, Abin<T>& A,const typename Abin<T>::nodo ori){
 
     if(A.hijoDrcho(n) != Abin<T>::NODO_NULO){
-        poda_Rec(A.hijoDrcho(n),A,ori);
+        podaAbin_Rec(A.hijoDrcho(n),A,ori);
     }
     if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
-        poda_Rec(A.hijoIzqdo(n),A,ori);
+        podaAbin_Rec(A.hijoIzqdo(n),A,ori);
     }
     if( n != ori)
     {
@@ -26,9 +26,11 @@ void poda_Rec(typename Abin<T>::nodo n, Abin<T>& A,const typename Abin<T>::nodo 
 }
 
 template <typename T>
-Abin<T>& poda(typename Abin<T>::nodo n, Abin<T>& A){
-    poda_Rec(n,A,n);
-    return A;
+Abin<T>& podaAbin(typename Abin<T>::nodo n, Abin<T>& A){
+    if(!A.arbolVacio()){
+        podaAbin_Rec(n,A,n);
+        return A;
+    }
 }
 
 using namespace std;
@@ -52,6 +54,6 @@ int main (){
     cout << "\n*** Mostrar arbol binario B ***\n";
     imprimirAbin(B); // En std::cout
     cout<<"--------------------EJ1--------------------"<<endl;
-    A = poda(A.hijoIzqdo(A.raiz()),A);
+    A = podaAbin(A.hijoIzqdo(A.raiz()),A);
     imprimirAbin(A);
 }
