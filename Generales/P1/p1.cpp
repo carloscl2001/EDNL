@@ -104,28 +104,46 @@ bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A)
    }
 }
 
-/*
-//=>ejercicio7B
+
+//=>ejercicio8
 template <typename T>
-bool pseudoAbinB(Abin<T>& A)
+Abin<T> reflexAbin(const Abin<T>& A)
 {
-    return pseudoAbinBRec(A.raiz(),A);
+    Abin<T> C;
+    if(A.arbolVacio() == true){
+        return A;
+    }
+    else{
+        C.insertarRaiz(A.elemento(A.raiz()));
+        reflexAbin_Rec(A.raiz(),C.raiz(),A,C);
+        return C;
+    }
+    
 }
+
 template <typename T>
-bool pseudoAbinBRec(typename Abin<T>::nodo n, const Abin<T>& A)
+void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, Abin<T> C)
 {
-    if ( n == Abin<T>::NODO_NULO)
-    {
-        if
+    if(n != Abin<T>::NODO_NULO){
+        if( A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
+            C.insertarHijoDrcho(m,A.elemento(A.hijoIzqdo(n)));
+            reflexAbin_Rec(A.hijoIzqdo(n),A.hijoDrcho(m),A,C);
+            
+        }
+        if( A.hijoDrcho(n) != Abin<T>::NODO_NULO){
+            C.insertarHijoIzqdo(m,A.elemento(A.hijoDrcho(n)));
+            reflexAbin_Rec(A.hijoDrcho(n),A.hijoIzqdo(m),A,C);
+            
+        }
     }
 }
-*/
+
 
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
 int main (){
-
+    using namespace std;
     int a = 10;
     
     Abin<tElto> A, B;
@@ -143,7 +161,8 @@ int main (){
     imprimirAbin(B); // En std::cout
     cout<<"--------------------EJ1--------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
-    cout<<"--------------------EJ2--------------------"<<endl;
+    /*
+    cout<<"C--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
     cout<<"--------------------EJ3--------------------"<<endl;
     cout<<"\tProfundiad del nodo: "<<profNodoAbin(A.hijoIzqdo(A.hijoIzqdo(A.raiz())),A)<<endl;
@@ -151,8 +170,9 @@ int main (){
     cout<<"\tAltura del nodo: "<<A.altura(A.raiz())<<endl;
     cout<<"--------------------EJ6--------------------"<<endl;
     cout<<"\tDesequilibrio del arbol: "<<desequilibrio(A)<<endl;
-    cout<<"--------------------EJ7/A--------------------"<<endl;
+    cout<<"--------------------EJ7--------------------"<<endl;
     cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
-    cout<<"--------------------EJ7/B--------------------"<<endl;
-    //cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinB(A)<<endl;
+    */
+    cout<<"--------------------EJ8--------------------"<<endl;
+    imprimirAbin(reflexAbin(A));
 }
