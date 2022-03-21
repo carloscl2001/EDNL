@@ -147,6 +147,39 @@ void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Ab
     }
 }
 
+//=>ejercicio9
+/*
+struct{
+    float operando;
+    char operador;
+}tdatos
+*/
+template <typename T>
+float resultOperacion(const Abin<T>& E){
+    return resultOperacionRec(E.raiz(),E);
+}
+
+template <typename T>
+float resultOperacionRec(typename Abin<T>::nodo n, const Abin<T> E){
+    if(n == Abin<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        if(E.hijoIzqdo(n) == Abin<T>::NODO_NULO && E.hijoDrcho(n) == Abin<T>::NODO_NULO){
+            switch(E.elemento(E.padre(n)).operador)
+            {
+                case "+":   return(E.elemento(n).operando + resultOperacionRec(E.hijoDrcho(E.padre(n)),E); 
+                case "-":   return(E.elemento(n).operando - resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
+                case "*":   return(E.elemento(n).operando * resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
+                case "/":   return(E.elemento(n).operando / resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
+            }
+        }
+        else{
+            resultOperacionRec(E.hijoIzqdo(n),E);
+            resultOperacionRec(E.hijoDrcho(n),E);
+        }
+    }
+}
 
 using namespace std;
 typedef char tElto;
@@ -170,7 +203,6 @@ int main (){
     imprimirAbin(B); // En std::cout
     cout<<"--------------------EJ1--------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
-    /*
     cout<<"C--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
     cout<<"--------------------EJ3--------------------"<<endl;
@@ -181,7 +213,9 @@ int main (){
     cout<<"\tDesequilibrio del arbol: "<<desequilibrio(A)<<endl;
     cout<<"--------------------EJ7--------------------"<<endl;
     cout<<"\tEs un arbol pseudocompleto: "<<pseudoAbinA(A)<<endl;
-    */
     cout<<"--------------------EJ8//solo cambia los nodos con 1 hijo--------------------"<<endl;
     imprimirAbin(reflexAbin(A));
+    cout<<"--------------------EJ9--------------------"<<endl;
+    cout<<
+
 }
