@@ -37,7 +37,7 @@ int mismoNivel_Rec(typename Abin<T>::nodo n1, const Abin<T>& A){
         return 0;
     }
     else{
-        if(recorrer(n1,A,prof(n1,A)) > 2){
+        if(recorrer(A.raiz(),A,prof(n1,A)) > 2){
             return 1 + mismoNivel_Rec(A.hijoIzqdo(n1),A) + mismoNivel_Rec(A.hijoDrcho(n1),A);
         }
         else{
