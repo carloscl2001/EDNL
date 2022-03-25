@@ -31,6 +31,9 @@ Abin<T>& podaAbin(typename Abin<T>::nodo n, Abin<T>& A){
         podaAbin_Rec(n,A,n);
         return A;
     }
+    else{
+        return A;
+    }
 }
 
 using namespace std;
