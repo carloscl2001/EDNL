@@ -1,5 +1,5 @@
-#ifndef AGEN2_H
-#define AGEN2_H
+#ifndef AGEN_E_S_H
+#define AGEN_E_S_H
 
 #include <cassert>
 #include <iostream>
