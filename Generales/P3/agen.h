@@ -97,9 +97,8 @@ void rellenarDescendientes(istream& is, typename Agen<T>::nodo n, Agen<T>& A, co
 }
 
 template <typename T>
-void imprimirAgen(const Agen<T>& A)
+void imprimirAgen(const Agen<T>& A){
 // Post: Muestra los nodos de A en la salida est�ndar
-{
    if (!A.arbolVacio())
    {
       cout << "Raiz del arbol: "
