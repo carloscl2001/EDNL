@@ -1,5 +1,5 @@
-#ifndef AGEN_H
-#define AGEN_H
+#ifndef AGEN2_H
+#define AGEN2_H
 
 #include <cassert>
 #include <iostream>
@@ -21,7 +21,7 @@ void rellenarAgen(Agen<T>& A, const T& fin)
    T e;
 
    assert(A.arbolVacio());
-   cout << "Raiz (Fin = " << fin << "): "; cin >> e;
+   cout << "Ra�z (Fin = " << fin << "): "; cin >> e;
    if (e != fin) {
       A.insertarRaiz(e);
       rellenarDescendientes(A.raiz(), A, fin);
@@ -97,8 +97,9 @@ void rellenarDescendientes(istream& is, typename Agen<T>::nodo n, Agen<T>& A, co
 }
 
 template <typename T>
-void imprimirAgen(const Agen<T>& A){
+void imprimirAgen(const Agen<T>& A)
 // Post: Muestra los nodos de A en la salida est�ndar
+{
    if (!A.arbolVacio())
    {
       cout << "Raiz del arbol: "
@@ -156,4 +157,4 @@ void imprimirDescendientes(ostream& os, typename Agen<T>::nodo n, const Agen<T>&
    os << fin << ' ';
 }
 
-#endif 
+#endif   // AGEN_E_S_H
