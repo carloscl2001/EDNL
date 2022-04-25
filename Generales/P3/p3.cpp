@@ -98,8 +98,16 @@ int altura(typename Agen<T>::nodo n, const Agen<T>& A)
 
 
 //=>ejercicio 4
+
 template <typename T>
-void podaAgen(typename Agen<T>::nodo n, Agen<T>& A)
+void podaAgen(Agen<T>& A)
+{
+    podaAgenRec(A.raiz(),A);
+}
+
+
+template <typename T>
+void podaAgenRec(typename Agen<T>::nodo n, Agen<T>& A)
 {
     if(n != Agen<T>::NODO_NULO)
     {
@@ -107,13 +115,16 @@ void podaAgen(typename Agen<T>::nodo n, Agen<T>& A)
             A.eliminarRaiz();
         }
         else{
-            typename Agen<T>::nodo hijo;
-            hijo = A.hijoIzqdo(n);
-            while (hijo != Agen<T>::NODO_NULO)
-            {
-               podaNodo(hijo, A);
-               hijo = A.hermDrcho(hijo);
-            }
+            //if(A.elemento(n) == x)
+           // {
+                typename Agen<T>::nodo hijo;
+                hijo = A.hijoIzqdo(n);
+                while (hijo != Agen<T>::NODO_NULO)
+                {
+                    podaNodo(hijo, A);
+                    hijo = A.hermDrcho(hijo);
+                }
+            //}
         }
     }
 }
@@ -121,22 +132,42 @@ void podaAgen(typename Agen<T>::nodo n, Agen<T>& A)
 template <typename T>
 void podaNodo(typename Agen<T>::nodo n, Agen<T>& A)
 {
-    typename Agen<T>::nodo hijo;
-    hijo = A.hijoIzqdo(n);
-    while (hijo != Agen<T>::NODO_NULO)
+    if(A.hijoIzqdo(n) != Agen<T>::NODO_NULO)
     {
-        if(A.hijoIzqdo(hijo) == Agen<T>::NODO_NULO)
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while (hijo != Agen<T>::NODO_NULO)
         {
-            A.eliminarHijoIzqdo(n);
+            if(A.hijoIzqdo(hijo) == Agen<T>::NODO_NULO)
+            {
+                A.eliminarHijoIzqdo(n);
+            }
+            else
+            {
+                podaNodo(A.hijoIzqdo(n),A);
+            }
+            hijo = A.hermDrcho(hijo);
+        }
+        A.eliminarHijoIzqdo(A.padre(n));
+    }
+    else
+    {
+        if(n == A.hijoIzqdo(A.padre(n)))
+        {
+            A.eliminarHijoIzqdo(A.padre(n));
         }
         else
         {
-            podaNodo(A.hijoIzqdo(n),A);
+            typename Agen<T>::nodo hijo = A.hijoIzqdo(A.padre(n));
+            while(A.hermDrcho(hijo) != n){
+
+                hijo = A.hermDrcho(hijo);
+                
+            }
+
+            A.eliminarHermDrcho(hijo);
         }
-        hijo = A.hermDrcho(hijo);
     }
-    //A.eliminarHijoIzqdo(A.padre(n));
-    
 }
 
 
@@ -146,6 +177,7 @@ int main (){
     Agen<tElto> A;
     ifstream fe("agen.dat"); // Abrir fichero de entrada.
     rellenarAgen(fe, A); // Desde fichero.
+    int f;
 
     fe.close();
 
@@ -153,7 +185,7 @@ int main (){
     imprimirAgen(A); // En std::cout
     cout<<"----------------------"<<endl;
     //cout<< calcularDesequilibrio(A.raiz(),A)<<endl;
-    podaAgen(A.raiz(),A);
+    podaAgen(A);
     imprimirAgen(A); // En std::cout
 
     
