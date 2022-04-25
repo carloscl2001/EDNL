@@ -7,9 +7,6 @@ typedef char tElto;
 const tElto fin = '#'; // fin de lectura
 
 //=>ejercicio 3
-
-
-
 template <typename T>
 int desequilibrio(const Agen<T>& A)
 {
@@ -98,6 +95,53 @@ int altura(typename Agen<T>::nodo n, const Agen<T>& A)
     }
 }
 
+
+
+//=>ejercicio 4
+template <typename T>
+void podaAgen(typename Agen<T>::nodo n, Agen<T>& A)
+{
+    if(n != Agen<T>::NODO_NULO)
+    {
+        if(n == A.raiz() && A.hijoIzqdo(n) == Agen<T>::NODO_NULO){
+            A.eliminarRaiz();
+        }
+        else{
+            typename Agen<T>::nodo hijo;
+            hijo = A.hijoIzqdo(n);
+            while (hijo != Agen<T>::NODO_NULO)
+            {
+               podaNodo(hijo, A);
+               hijo = A.hermDrcho(hijo);
+            }
+        }
+    }
+}
+
+template <typename T>
+void podaNodo(typename Agen<T>::nodo n, Agen<T>& A)
+{
+    typename Agen<T>::nodo hijo;
+    hijo = A.hijoIzqdo(n);
+    while (hijo != Agen<T>::NODO_NULO)
+    {
+        if(A.hijoIzqdo(hijo) == Agen<T>::NODO_NULO)
+        {
+            A.eliminarHijoIzqdo(n);
+        }
+        else
+        {
+            podaNodo(A.hijoIzqdo(n),A);
+        }
+        hijo = A.hermDrcho(hijo);
+    }
+    //A.eliminarHijoIzqdo(A.padre(n));
+    
+}
+
+
+
+
 int main (){
     Agen<tElto> A;
     ifstream fe("agen.dat"); // Abrir fichero de entrada.
@@ -108,5 +152,9 @@ int main (){
     cout<<"----------------------"<<endl;
     imprimirAgen(A); // En std::cout
     cout<<"----------------------"<<endl;
-    cout<< calcularDesequilibrio(A.raiz(),A)<<endl;
+    //cout<< calcularDesequilibrio(A.raiz(),A)<<endl;
+    podaAgen(A.raiz(),A);
+    imprimirAgen(A); // En std::cout
+
+    
 }
