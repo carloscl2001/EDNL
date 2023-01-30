@@ -11,8 +11,7 @@ int rebelde2(typename Abin<T>::nodo n,const T elemento, const Abin<T>& A){
         return 1;
     }
     else{
-        if(elemento != A.elemento(n))
-        {
+        if(elemento != A.elemento(n)){
             return 1 + rebelde2(A.padre(n),elemento,A);
         }
         else{
@@ -22,14 +21,12 @@ int rebelde2(typename Abin<T>::nodo n,const T elemento, const Abin<T>& A){
 }
 
 template <typename T>
-int nNodosRebel(const Abin<T>& A)
-{
+int nNodosRebel(const Abin<T>& A){
     return nNodosRebel_Rec(A.raiz(),A);
 }
 
 template <typename T>
-int nNodosRebel_Rec(typename Abin<T>::nodo n, const Abin<T>& A)
-{
+int nNodosRebel_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
     if(n == Abin<T>::NODO_NULO){
         return 0;
     }
