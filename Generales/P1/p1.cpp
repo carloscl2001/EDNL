@@ -8,8 +8,7 @@
 
 //=>jercicio 1
 template <typename T>
-int nNodos(Abin<T> A)
-{
+int nNodos(Abin<T> A){
     return nNodos_Rec(A.raiz(), A);
 }
 
@@ -28,10 +27,10 @@ int nNodos_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
 
 //=>ejercicio2
 template <typename T>
-int altura(const Abin<T>& A)
-{
+int altura(const Abin<T>& A){
     return alturaRec(A.raiz(), A);
 }
+
 template <typename T>
 int alturaRec(typename  Abin<T>::nodo n, const Abin<T>& A){
     using namespace std;
@@ -84,22 +83,14 @@ bool pseudoAbinA(Abin<T>& A){
 }
 
 template <typename T>
-bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A)
-{
+bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A){
    if(alturaRec(n,A) == 1)
-   {
        return (nNodos_Rec(n,A) != 1);
-   }
-   else
-   {
-       if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
-       {
-           return pseudoAbinARec(A.hijoDrcho(n),A);
-       }
+   else{
+        if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
+            return pseudoAbinARec(A.hijoDrcho(n),A);
         else
-        {
             return (pseudoAbinARec(A.hijoIzqdo(n),A) && pseudoAbinARec(A.hijoDrcho(n),A));
-        }
    }
 }
 
@@ -109,9 +100,8 @@ template <typename T>
 Abin<T> reflexAbin(const Abin<T>& A)
 {
     Abin<T> C;
-    if(A.arbolVacio() == true){
-        return A;
-    }
+    if(A.arbolVacio() == true
+        return A
     else{
         C.insertarRaiz(A.elemento(A.raiz()));
         reflexAbin_Rec(A.raiz(),C.raiz(),A,C);
@@ -203,7 +193,7 @@ int main (){
     imprimirAbin(B); // En std::cout
     cout<<"--------------------EJ1--------------------"<<endl;
     cout<<"\tNumero de nodos: "<<nNodos(A)<<endl;
-    cout<<"C--------------------EJ2--------------------"<<endl;
+    cout<<"--------------------EJ2--------------------"<<endl;
     cout<<"\tAltura de arbol: "<<altura(A)<<endl;
     cout<<"--------------------EJ3--------------------"<<endl;
     cout<<"\tProfundiad del nodo: "<<profNodoAbin(A.hijoIzqdo(A.hijoIzqdo(A.raiz())),A)<<endl;
