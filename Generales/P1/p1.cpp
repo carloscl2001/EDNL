@@ -14,8 +14,7 @@ int nNodos(Abin<T> A){
 
 template <typename T>
 int nNodos_Rec(typename Abin<T>::nodo n, const Abin<T>& A){
-    if(n == Abin<T>::NODO_NULO)
-    {
+    if(n == Abin<T>::NODO_NULO){
         return 0;
         //cout<<"elemento del ndodo"<<A.elemento(n)<<endl;
     }else{
@@ -54,7 +53,8 @@ int profNodoAbin(typename Abin<T>::nodo n, const Abin<T>& A){
         return -1;
     }
     */
-    else return 1 + profNodoAbin(A.padre(n), A);
+    else 
+        return 1 + profNodoAbin(A.padre(n), A);
 }
 
 
