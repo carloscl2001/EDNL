@@ -86,7 +86,7 @@ template <typename T>
 bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A){
     if(alturaRec(n,A) == 1)
         return (nNodos_Rec(n,A) != 1);
-        
+
     else{
         if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
             return pseudoAbinARec(A.hijoDrcho(n),A);
@@ -98,8 +98,7 @@ bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A){
 
 //=>ejercicio8
 template <typename T>
-Abin<T> reflexAbin(const Abin<T>& A)
-{
+Abin<T> reflexAbin(const Abin<T>& A){
     Abin<T> C;
     if(A.arbolVacio() == true)
         return A;
