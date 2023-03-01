@@ -84,9 +84,9 @@ bool pseudoAbinA(Abin<T>& A){
 
 template <typename T>
 bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A){
-   if(alturaRec(n,A) == 1)
+    if(alturaRec(n,A) == 1)
        return (nNodos_Rec(n,A) != 1);
-   else{
+    else{
         if(alturaRec(A.hijoIzqdo(n),A) > alturaRec(A.hijoDrcho(n),A))
             return pseudoAbinARec(A.hijoDrcho(n),A);
         else
