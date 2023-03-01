@@ -95,6 +95,24 @@ bool pseudoAbinARec(typename Abin<T>::nodo n, Abin<T>& A){
     }
 }
 
+//=>ejercicio7-8
+template <typename T>
+bool Similar_Abin(const Abin<T>& A, const Abin<T>& B){
+    return Similar_Abin_Rec(A.raiz(),B.raiz(),A,B);
+}
+
+template <typename T>
+bool Similar_Abin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, const Abin<T>& B){
+    if(n == Abin<T>::NODO_NULO && m == Abin<T>::NODO_NULO)
+        return true;
+    else{
+        if(n == Abin<T>::NODO_NULO || m == Abin<T>::NODO_NULO)
+            return false;
+        else{
+            return (Similar_Abin_Rec(A.hijoIzqdo(n),B.hijoIzqdo(m),A,B) && Similar_Abin_Rec(A.hijoDrcho(n),B.hijoDrcho(m),A,B));
+        }
+    }
+}
 
 //=>ejercicio8
 template <typename T>
@@ -110,8 +128,7 @@ Abin<T> reflexAbin(const Abin<T>& A){
 }
 
 template <typename T>
-void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, Abin<T>& C)
-{
+void reflexAbin_Rec(typename Abin<T>::nodo n, typename Abin<T>::nodo m, const Abin<T>& A, Abin<T>& C){
     if(n != Abin<T>::NODO_NULO){
         if((A.hijoIzqdo(n) != Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO) || (A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) != Abin<T>::NODO_NULO)){
             if( A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
