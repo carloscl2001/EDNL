@@ -100,8 +100,8 @@ template <typename T>
 Abin<T> reflexAbin(const Abin<T>& A)
 {
     Abin<T> C;
-    if(A.arbolVacio() == true
-        return A
+    if(A.arbolVacio() == true)
+        return A;
     else{
         C.insertarRaiz(A.elemento(A.raiz()));
         reflexAbin_Rec(A.raiz(),C.raiz(),A,C);
@@ -158,10 +158,10 @@ float resultOperacionRec(typename Abin<T>::nodo n, const Abin<T> E){
         if(E.hijoIzqdo(n) == Abin<T>::NODO_NULO && E.hijoDrcho(n) == Abin<T>::NODO_NULO){
             switch(E.elemento(E.padre(n)).operador)
             {
-                case "+":   return(E.elemento(n).operando + resultOperacionRec(E.hijoDrcho(E.padre(n)),E); 
-                case "-":   return(E.elemento(n).operando - resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
-                case "*":   return(E.elemento(n).operando * resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
-                case "/":   return(E.elemento(n).operando / resultOperacionRec(E.hijoDrcho(E.padre(n)),E);
+                case "+":   return(E.elemento(n).operando + resultOperacionRec(E.hijoDrcho(E.padre(n)),E)); 
+                case "-":   return(E.elemento(n).operando - resultOperacionRec(E.hijoDrcho(E.padre(n)),E));
+                case "*":   return(E.elemento(n).operando * resultOperacionRec(E.hijoDrcho(E.padre(n)),E));
+                case "/":   return(E.elemento(n).operando / resultOperacionRec(E.hijoDrcho(E.padre(n)),E));
             }
         }
         else{
