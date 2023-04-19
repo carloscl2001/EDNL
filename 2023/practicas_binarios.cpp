@@ -63,6 +63,8 @@ int profundidadAbinRec(typename Abin<T>::nodo n, const Abin<T>& A){
 
 
 
+
+
 using namespace std;
 typedef char tElto;
 const tElto fin = '#'; // Fin de lectura.
