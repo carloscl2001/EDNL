@@ -182,8 +182,8 @@ float resultOperacionRec(typename Abin<T>::nodo n, const Abin<T> E){
             }
         }
         else{
-            resultOperacionRec(E.hijoIzqdo(n),E);
-            resultOperacionRec(E.hijoDrcho(n),E);
+            return resultOperacionRec(E.hijoIzqdo(n),E);
+            return resultOperacionRec(E.hijoDrcho(n),E);
         }
     }
 }
