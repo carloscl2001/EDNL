@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../grafoPMC.h"
-#include "../algoritmos/alg_grafoPMC.h"
+//#include "../grafoPMC.h"
+//#include "../algoritmos/alg_grafoPMC.h"
 
 struct Casilla{
     Casilla();
