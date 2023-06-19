@@ -211,29 +211,29 @@ matriz<tCoste> Floyd(const GrafoP<tCoste>& G,
 // P[i][j] es el vértice por el que pasa el camino de coste
 // mínimo de i a j, si este vértice es i el camino es directo.
 {
-   typedef typename GrafoP<tCoste>::vertice vertice;
-   const size_t n = G.numVert();
-   matriz<tCoste> A(n);   // matriz de costes mínimos
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    const size_t n = G.numVert();
+    matriz<tCoste> A(n);   // matriz de costes mínimos
 
-   // Iniciar A y P con caminos directos entre cada par de vértices.
-   P = matriz<vertice>(n);
-   for (vertice i = 0; i < n; i++) {
-      A[i] = G[i];                    // copia costes del grafo
-      A[i][i] = 0;                    // diagonal a 0
-      P[i] = vector<vertice>(n, i);   // caminos directos
-   }
-   // Calcular costes mínimos y caminos correspondientes
-   // entre cualquier par de vértices i, j
-   for (vertice k = 0; k < n; k++)
-      for (vertice i = 0; i < n; i++)
-         for (vertice j = 0; j < n; j++) {
-            tCoste ikj = suma(A[i][k], A[k][j]);
-            if (ikj < A[i][j]) {
-               A[i][j] = ikj;
-               P[i][j] = k;
+    // Iniciar A y P con caminos directos entre cada par de vértices.
+    P = matriz<vertice>(n);
+    for (vertice i = 0; i < n; i++) {
+        A[i] = G[i];                    // copia costes del grafo
+        A[i][i] = 0;                    // diagonal a 0
+        P[i] = vector<vertice>(n, i);   // caminos directos
+    }
+    // Calcular costes mínimos y caminos correspondientes
+    // entre cualquier par de vértices i, j
+    for (vertice k = 0; k < n; k++)
+        for (vertice i = 0; i < n; i++)
+            for (vertice j = 0; j < n; j++) {
+                tCoste ikj = suma(A[i][k], A[k][j]);
+                if (ikj < A[i][j]) {
+                    A[i][j] = ikj;
+                    P[i][j] = k;
+                }
             }
-         }
-   return A;
+    return A;
 }
 
 template <typename tCoste> typename GrafoP<tCoste>::tCamino
@@ -256,7 +256,7 @@ caminoAux(typename GrafoP<tCoste>::vertice v,
 }
 
 template <typename tCoste> typename GrafoP<tCoste>::tCamino
-camino(typename GrafoP<tCoste>::vertice v,
+camino(typename GrafoP<tCoste>::vertice v, 
        typename GrafoP<tCoste>::vertice w,
        const matriz<typename GrafoP<tCoste>::vertice>& P)
 // Devuelve el camino de coste mínimo desde v hasta w a partir
