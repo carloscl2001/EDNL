@@ -33,8 +33,9 @@ bool comprobarSubArboles(typename Abin<T>::nodo n, const Abin<T>& A){
     return comprobarSubArbolIzq(A.hijoIzqdo(n),A,A.elemento(n)) && comprobacionSubArbolDcho(A.hijoDrcho(n),A,A.elemento(n));
 }
 
+template <typename T>
 bool comprobarSubArbolIzq(typename Abin<T>::nodo n, const Abin<T>& A){
-    if(comprobarSubArbolIzqRec < A.elemento(n)){
+    if(comprobarSubArbolIzqRec < A.elemento(n),A){
         return true;
     }else{
         return false;
@@ -56,5 +57,4 @@ bool comprobacionSubArbolDcho(typename Abin<T>::nodo n, const Abin<T>& A, T& min
     }else{
         return false;
     }
-    
 }

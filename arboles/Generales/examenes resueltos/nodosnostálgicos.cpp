@@ -39,6 +39,9 @@ int nNodosNostal(const Abin<T>& A)
     return nNodosNostal_Rec(A.raiz(),A);
 }
 
+//Descendientes: propio nodo + todos los hijos de todos los niveles.
+//Descendientes propios: solo los hijos del nivel inferior, es decir los directos.
+
 template <typename T>
 int nNodosNostal_Rec(typename Abin<T>::nodo n,const Abin<T>& A)
 {
@@ -48,7 +51,7 @@ int nNodosNostal_Rec(typename Abin<T>::nodo n,const Abin<T>& A)
     }
     else
     {
-        if(nNodosAnte(n,A) > nNodosDesc(n,A) - 1)
+        if(nNodosAnte(n,A) > nNodosDesc(n,A))
         {
             return 1 + nNodosNostal_Rec(A.hijoIzqdo(n),A) + nNodosNostal_Rec(A.hijoDrcho(n),A);
         }

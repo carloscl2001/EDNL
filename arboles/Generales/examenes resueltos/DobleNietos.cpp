@@ -38,7 +38,7 @@ template <typename T>
 bool condicion(typename Agen<T>::nodo n, const Agen<T>& A){
     int numeroNietos = numNietos(n,A);
     int numeroBisNietos = numBisNietos(n,A);
-    if(numeroBisNietos == numeroBisNietos*2){
+    if(numeroNietos == numeroBisNietos*2){
         return true;
     }else{
         return false;
