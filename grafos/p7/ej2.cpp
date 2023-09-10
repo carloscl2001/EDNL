@@ -3,13 +3,11 @@
 //#include "../algoritmos/alg_grafoPMC.h"
 
 struct Casilla{
-    Casilla();
     Casilla(size_t x, size_t y) : i(x), j(y) {}
     int i, j;
 };
 
 struct Pared{
-    Pared();
     Pared(Casilla a, Casilla b) : c1(a), c2(b) {}
     Casilla c1, c2;
 };
@@ -31,8 +29,8 @@ typename GrafoP<tCoste>::vertice toVertice(Casilla c){
 template <typename tCoste>
 GrafoP<tCoste> ConstruirLaberinto(vector<Pared> paredes, int n){
     GrafoP<tCoste> laberinto(n*n);
-    for(typename GrafoP<tCoste>::vertice v = 0; v <= n; v++){
-        for(typename GrafoP<tCoste>::vertice w = 0; w <= n; w++){
+    for(typename GrafoP<tCoste>::vertice v = 0; v < n; v++){
+        for(typename GrafoP<tCoste>::vertice w = 0; w < n; w++){
             if(v = w)
                 laberinto[v][w] = GrafoP::INFINITO;
             else if(esAdyacente(toCasilla(v, n), toCasilla(w, n)))
@@ -42,7 +40,7 @@ GrafoP<tCoste> ConstruirLaberinto(vector<Pared> paredes, int n){
         }
     }
     for(int i = 0; i <= paredes.size(); i++)
-        laberinto[paredes[i].c1][paredes[j].c2] = GrafoP::INFINITO;
+        laberinto[paredes[i].c1][paredes[i].c2] = GrafoP::INFINITO;
     return laberinto;
 }
 
@@ -54,7 +52,7 @@ size_t ResolverLaberinto(vector<Casilla>& caminoCasilla, Casilla origen, Casilla
 
     typename GrafoP<tCoste>::vertice v = destino;
     while(v != origen){
-        caminoCasilla.insert(camino.begin(), toCasilla(v));
+        caminoCasilla.insert(camino.begin(), toCasilla(camino[v]));
         v = camino[v];
     }
 
@@ -62,4 +60,5 @@ size_t ResolverLaberinto(vector<Casilla>& caminoCasilla, Casilla origen, Casilla
         caminoCasilla[i] = toCasilla(camino[i]);
 
     return costes[toVertice(destino)];
-}
+};
+
