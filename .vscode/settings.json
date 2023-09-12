@@ -37,6 +37,7 @@
 "files.associations": {
     "ostream": "cpp",
     "random": "cpp",
-    "limits": "cpp"
+    "limits": "cpp",
+    "vector": "cpp"
 }
 }
