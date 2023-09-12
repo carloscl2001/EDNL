@@ -5,6 +5,8 @@
 #include <fstream> 
 #include "agenDinamica.h"
 #include "abin_E-S.h"
+
+/*
 template <typename T>
 int numNietos(typename Agen<T>::nodo n, const Agen<T>& A){
     int numeroNietos = 0;
@@ -62,4 +64,20 @@ int DobleNietosAgen(typename Agen<T>::nodo n, const Agen<T>& A){
         }
         return numero_total;
     }
+}
+*/
+template <typename T>
+size_t nNietos(typename Agen<T>::nodo n, const Agen<T>& A){
+    
+}
+
+template <typename T>
+size_t nBisnietosNietos(typename Agen<T>::nodo n, const Agen<T>& A){
+    
+}
+
+
+template <typename T>
+size_t nNodosAgen(typename Agen<T>::nodo n, const Agen<T>& A){
+    
 }
