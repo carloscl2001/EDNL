@@ -80,7 +80,7 @@
     "functional": "cpp",
     "iterator": "cpp",
     "numeric": "cpp"
-},
+  },
   "C_Cpp_Runner.msvcWarnings": [
     "/W4",
     "/permissive-",

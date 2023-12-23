@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Repositorios/EDNL/grafos/algoritmos",
-      "program": "d:/Repositorios/EDNL/grafos/algoritmos/build/Debug/outDebug",
+      "cwd": "d:/Repositorios/EDNL",
+      "program": "d:/Repositorios/EDNL/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
