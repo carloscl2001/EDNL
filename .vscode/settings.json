@@ -79,7 +79,8 @@
     "typeinfo": "cpp",
     "functional": "cpp",
     "iterator": "cpp",
-    "numeric": "cpp"
+    "numeric": "cpp",
+    "cassert": "cpp"
   },
   "C_Cpp_Runner.msvcWarnings": [
     "/W4",

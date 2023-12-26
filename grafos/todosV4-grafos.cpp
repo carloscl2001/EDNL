@@ -8,6 +8,12 @@
 #include "abin_E-S.h"
 #include "alg_grafoPMC.h"
 #include "matriz.h"
+#include "implementacion/alg_grafoPMC.h"
+#include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <vector>
+
 using namespace std;
 
 
@@ -384,3 +390,182 @@ tCoste ejercicio8(const GrafoP<tCoste> bus, const GrafoP<tCoste> tren, typename 
     return minimo;
 
 }
+
+
+
+/* Ejercicio 9: Se dispone de dos grafos que representan la matriz de costes para viajes en un 
+determinado país, pero por diferentes medios de transporte (tren y autobús, por 
+ejemplo). Por supuesto ambos grafos tendrán el mismo número de nodos, N. Dados 
+ambos grafos, una ciudad de origen, una ciudad de destino y el coste del taxi para 
+cambiar de una estación a otra dentro de cualquier ciudad (se supone constante e igual 
+para todas las ciudades), implementa un subprograma que calcule el camino y el coste 
+mínimo para ir de la ciudad origen a la ciudad destino. */
+
+template <typename tCoste>
+
+struct solucion{
+    tCoste minimo;
+    std::vector<typename GrafoP<tCoste>::vertice> camino;
+}
+
+solucion ejercicio9(typename GrafoP<tCoste>::vertice Origen, typename GrafoP<tCoste>::vertice Destino, tCoste taxi, const GrafoP<tCoste> tren, const GrafoP<tCoste> bus){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+
+    assert(tren.numVert() == autobus.numVert());
+    const size_t N = tren.numVert();
+
+    assert(origen < N && destino < N);
+
+    ej7_9<tCoste> resultado;
+    resultado.coste_minimo = {};
+
+    // Esto es un supergrafo, porque de 0 a N - 1 incluye el grafo del tren,
+    // y de N a (N * 2 - 1) incluye el grafo del autobús.
+    GrafoP<tCoste> grafo_unido(N * 2);
+    for (vertice i = 0; i < N; i++)
+    {
+        // Añadimos el coste del taxi para ir de una ciudad a otra.
+        grafo_unido[i][i + N] = grafo_unido[i + N][i] = taxi;
+
+        for (vertice j = 0; j < N; j++)
+        {
+            grafo_unido[i][j] = tren[i][j];
+            grafo_unido[N + i][N + j] = autobus[i][j];
+        }
+    }
+
+    // Haremos Floyd para calcular el mejor camino entre el origen y el destino.
+    matriz<tCoste> P; // para camino
+    const auto distancias = Floyd(grafo_unido, P);
+
+    // Elegimos la mejor opción posible:
+    resultado.coste_minimo = std::min(distancias[origen][destino], // salir en tren y llegar en tren
+        std::min(distancias[N + origen][destino]),                 // salir en autobús y llegar en tren
+        std::min(distancias[origen][N + destino],                  // salir en tren y llegar en autobús
+            distancias[origen + N][destino + N]));                 // salir en autobús y llegar en autobús
+
+    if (resultado.coste_minimo == distancias[N + origen][destino])
+        origen = origen + N;
+    else if (resultado.coste_minimo == distancias[origen][N + destino])
+        destino = destino + N;
+    else if (resultado.coste_minimo != distancias[origen][destino])
+    {
+        destino = destino + N;
+        origen = origen + N;
+    }
+
+    resultado.camino = camino(origen, destino, P);
+
+    // Le quitamos el offset que pueda tener con el módulo (con N = 8, 15 pasaría a ser 7).
+    for (auto i = resultado.camino.primera(); i != resultado.camino.fin(); i = resultado.camino.siguiente(i))
+        resultado.camino.elemento(i) = resultado.camino.elemento(i) % N;
+
+    return resultado;
+    
+
+}
+
+
+/*Ejercicio 10: Se dispone de tres grafos que representan la matriz de costes para viajes en un 
+determinado país, pero por diferentes medios de transporte (tren, autobús y avión). Por 
+supuesto los tres grafos tendrán el mismo número de nodos, N. 
+Dados los siguientes datos: 
+     los tres grafos, 
+     una ciudad de origen, 
+     una ciudad de destino, 
+     el coste del taxi para cambiar, dentro de una ciudad, de la estación de tren a la 
+    de autobús o viceversa (taxi-tren-bus) y 
+     el coste del taxi desde el aeropuerto a la estación de tren o la de autobús, o 
+    viceversa (taxi-aeropuerto-tren/bus) 
+y asumiendo que ambos costes de taxi (distintos entre sí, son dos costes diferentes) son 
+constantes e iguales para todas las ciudades, implementa un subprograma que calcule el 
+camino y el coste mínimo para ir de la ciudad origen a la ciudad destino. */
+template<typename tCoste>
+struct solucion
+{
+    Lista<typename GrafoP<tCoste>::vertice> camino;
+    tCoste coste_minimo;
+};
+
+template <typename tCoste>
+tCoste ejercicio10(typename GrafoP<tCoste>::vertice origen, typename GrafoP<tCoste>::vertice destino, const tCoste coste_tren_bus, const tCoste coste_aero, const GrafoP<tCoste> &tren, const GrafoP<tCoste> &bus, const GrafoP<tCoste> &avion){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    const size_t N = tren.numVert();
+    static const INF = GrafoP<tCoste>::INFINITO;
+
+    assert(origen < N && destino < N);
+
+    GrafoP<tCoste> grafo_unido(N * 3);
+
+    for(vertice i = 0; i < N; i++){
+        //rellenamos el grafo con los costes de los taxis
+        grafo_unido[i][i+N] = grafo_unido[i+N][i] = coste_tren_bus;
+        grafo_unido[i+N][i+2*N] = grafo_unido[i+2*N][i+N] = coste_aero; 
+        grafo_unido[i][i+2*N] = grafo_unido[i+2*N][i] = coste_aero;
+        //rellenamos el resto del grafo con los costes de los medios de transporte
+        for( vertice j = 0; j < N; j++){
+            grafo_unido[i][j] = bus[i][j];
+            grafo_unido[i+N][j+N] = tren[i][j];
+            grafo_unido[i+2*N][j+2*N] = avion[i][j];
+        }
+    }
+
+    matriz<tCoste> distancias;
+    matriz<vertice> P
+    solucion sol;
+
+    distancias = Floyd(grafo_unido, P);
+
+    sol.coste_camino = std::min(distancias[origen][destino],//d. bus
+             distancias[origen+N][destino+N], //d. tren
+             distancias[origen+2*N][destino+2*N], //d. avion
+             distancias[origen][destino+N], // bus-tren
+             distancias[origen+N][destino], // tren-bus
+             distancias[origen][destino+2*N], //bus-avion
+             distancias[origen+N][destino+2*N], //tren-avion
+             distancias[origen+2*N][destino+N], //avion-tren
+             distancias[origen+2*N][destino] //avion-bus
+    );
+
+    if(sol.coste_camino == distancias[origen][destino]){
+        origen = origen;
+        destino = destino;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino+N]){
+        origen = origen + N;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino+2*N]){
+        origen = origen + 2*N;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen][destino+N]){
+        origen = origen;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino]){
+        origen = origen + N;
+        destino = destino;
+    }
+    else if(sol.coste_camino == distancias[origen][destino+2*N]){
+        origen = origen;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino+2*N]){
+        origen = origen + N;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino+N]){
+        origen = origen + 2*N;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino]){
+        origen = origen + 2*N;
+        destino = destino;
+    }
+
+    sol.camino = camino(origen, destino, P);
+    
+    for(auto i = sol.camino.primera(); i != sol.camino.fin(); i = sol.camino.siguiente(i)){
+        sol.camino.elemento(i) = sol.camino.elemento(i) % N;
+    }

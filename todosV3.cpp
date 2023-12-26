@@ -1401,10 +1401,10 @@ solucion ejercicio9(typename GrafoP<tCoste>::vertice Origen, typename GrafoP<tCo
     std::matriz<tCoste> global_floyd = Floyd(global, P);
 
     std::vector<tCoste> costes[] = {
-        global_floyd[origen][destino],
-        global_floyd[origen + N][destino + N],
-        global_floyd[origen][destino + N],
-        global_floyd[origen + N][destino]
+        global_floyd[origen][destino],//TREN
+        global_floyd[origen + N][destino + N],//BUS
+        global_floyd[origen][destino + N],//TREN-BUS
+        global_floyd[origen + N][destino]//BUS-TREN
     };
 
     solucion.s = std::min(costes);
