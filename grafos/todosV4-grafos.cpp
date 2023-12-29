@@ -882,3 +882,349 @@ solucion ejercicio1(vector<coordenadas> vector, matriz<bool> mAdyacencia){
 
     return solucion{p, mCostesFloyd};
 }
+
+/*
+2. El archipiélago de Tombuctú2 está formado por un número desconocido de islas,
+cada una de las cuales tiene, a su vez, un número desconocido de ciudades, las cuales
+tienen en común que todas y cada una de ellas dispone de un aeropuerto. Sí que se
+conoce el número total de ciudades del archipiélago (podemos llamarlo N, por ejemplo).
+Dentro de cada una de las islas existen carreteras que permiten viajar entre todas
+las ciudades de la isla. No existen puentes que unan las islas y se ha decidido que la
+opción de comunicación más económica de implantar será el avión.
+Se dispone de las coordenadas cartesianas (x, y) de todas y cada una de las
+ciudades del archipiélago. Se dispone de un grafo (matriz de adyacencia) en el que se
+indica si existe carretera directa entre cualesquiera dos ciudades del archipiélago. El
+objetivo de nuestro problema es encontrar qué líneas aéreas debemos implantar para
+poder viajar entre todas las ciudades del archipiélago, siguiendo los siguientes criterios:
+1) Se implantará una y sólo una línea aérea entre cada par de islas.
+2) La línea aérea escogida entre cada par de islas será la más corta entre todas
+las posibles.
+Así pues, dados los siguientes datos:
+• Lista de ciudades de Tombuctú2 representada cada una de ellas por sus
+coordenadas cartesianas.
+• Matriz de adyacencia de Tombuctú que indica las carreteras existentes en
+dicho archipiélago,
+Implementen un subprograma que calcule y devuelva las líneas aéreas necesarias para
+comunicar adecuadamente el archipiélago siguiendo los criterios anteriormente
+expuestos*/
+template <typename tCoste>
+struct lineaAerea{
+    vertice i, j;
+    tCoste coste;
+};
+
+template <typename tCoste>
+struct ciudad{
+    double x, y;
+};
+
+template <typename tCoste>
+tCoste distancia(ciudad c1, ciudad c2){
+    return sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
+}
+
+void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
+{
+    unsigned N = archipielago.numVert(), nIslas;
+    Particion p(n);
+    nIslas = N;
+    typedef typename Grafo::vertice vertice;
+
+    for(vertice i = 0; i < n; ++i)
+    {
+        for(vertice j = 0; j < n; ++j)
+        {   
+            //condicion de que exista carretera y condidicion de los representantes necesaria por la precondición de la función unir
+            if(archipielago[i][j] && p.encontrar(i) != p.encontrar(j))
+            {
+                --nIslas;
+                p.unir(p.encontrar(i), p.encontrar(j));
+            }
+        }
+    }
+    nLineas = nIslas*(nIslas-1)/2;
+    //Tras este for ya sabemos el numero de islas que hay y el numero de lineas aereas que necesitamos por cada par de islas
+    std::cout << "Numero de islas: " << nIslas << std::endl; 
+    std::cout << "Numero de lineas: " << nLineasPosibles << std::endl; 
+
+
+    //Apo que va a almacenar todas las lineas posibles
+    Apo<LineaAerea> apo(LineasPosibles);
+
+    //Rellenamos el apo con todas las lineas posibles da igual que nos valgan o no
+    for(vertice i = 0; i <= N-1; i++){
+        for(vertice j = 0; j <= N-1; j++){
+            linea(i, j, coste) = {i, j, distancia(i, j)};
+            apo.insertar(linea); //Inserto línea en el apo
+        }
+    }
+    
+    //vector solucion con las minimas lineas aereas
+    vector<LineaAerea> vector(nLineas);
+
+    //matriz que controla que una linea no tenga ni misma ciudad de origen ni misma ciudad de destino
+    matriz<bool> mLineaNoRepetida(N, false);
+
+    //Una vez en el Apo las lineas estan ordenadas de menor a mayor
+    //Ahora vamos a ir sacando las lineas del apo y comprobando si nos valen o no
+    int lineas_actual = 0; 
+    while(lineas_actual < nLineas){
+        lineaArea actual = apo.cima();
+        apo.suprimir();
+
+        //Si tienen representante distintos es pk las lineas une ciudad de islas distintas
+        //por tanto, se mete en el vector solucion, se unen para decir que ya hay una linea con esas islas a través de las ciudades
+        //y  aumentamos el contador de las lineas actuales
+        if(!mLineaNoRepetida[actual.i][actual.j]){
+            vector.push_back(actual);
+            mLineaNoRepetida[actual.i][actual.j] = T
+            lineas_actual++;
+        }
+    }
+
+    return vector;
+}
+
+
+/*
+2. El archipiélago de Tombuctú2 está formado por un número desconocido de islas,
+cada una de las cuales tiene, a su vez, un número desconocido de ciudades, las cuales
+tienen en común que todas y cada una de ellas dispone de un aeropuerto. Sí que se
+conoce el número total de ciudades del archipiélago (podemos llamarlo N, por ejemplo).
+Dentro de cada una de las islas existen carreteras que permiten viajar entre todas
+las ciudades de la isla. No existen puentes que unan las islas y se ha decidido que la
+opción de comunicación más económica de implantar será el avión.
+Se dispone de las coordenadas cartesianas (x, y) de todas y cada una de las
+ciudades del archipiélago. Se dispone de un grafo (matriz de adyacencia) en el que se
+indica si existe carretera directa entre cualesquiera dos ciudades del archipiélago. El
+objetivo de nuestro problema es encontrar qué líneas aéreas debemos implantar para
+poder viajar entre todas las ciudades del archipiélago, siguiendo los siguientes criterios:
+1) Se implantará una y sólo una línea aérea entre cada par de islas.
+2) La línea aérea escogida entre cada par de islas será la más corta entre todas
+las posibles.
+Así pues, dados los siguientes datos:
+• Lista de ciudades de Tombuctú2 representada cada una de ellas por sus
+coordenadas cartesianas.
+• Matriz de adyacencia de Tombuctú que indica las carreteras existentes en
+dicho archipiélago,
+Implementen un subprograma que calcule y devuelva las líneas aéreas necesarias para
+comunicar adecuadamente el archipiélago siguiendo los criterios anteriormente
+expuestos.
+PERO VERSIÓN EXAMEN -> EN VEZ DE LINEAS ENTRE CADA PAR DE ISLAS, QUE SEA LAS LINEAS MINIMAS*/
+template <typename tCoste>
+struct lineaAerea{
+    vertice i, j;
+    tCoste coste;
+};
+
+template <typename tCoste>
+struct ciudad{
+    double x, y;
+};
+
+template <typename tCoste>
+tCoste distancia(ciudad c1, ciudad c2){
+    return sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
+}
+
+void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
+{
+    unsigned n = archipielago.numVert(), nIslas;
+    Particion p(n);
+    nIslas = n;
+    typedef typename Grafo::vertice vertice;
+
+    for(vertice i = 0; i < n; ++i)
+    {
+        for(vertice j = 0; j < n; ++j)
+        {   
+            //condicion de que exista carretera y condidicion de los representantes necesaria por la precondición de la función unir
+            if(archipielago[i][j] && p.encontrar(i) != p.encontrar(j))
+            {
+                --nIslas;
+                p.unir(p.encontrar(i), p.encontrar(j));
+            }
+        }
+    }
+    nLineasPosibles = nIslas*(nIslas-1)/2;
+    nLineasMinimas = nIslas-1;
+    //Tras este for ya sabemos el numero de islas que hay y el numero de lineas aereas que necesitamos por cada par de islas
+    std::cout << "Numero de islas: " << nIslas << std::endl; 
+    std::cout << "Numero de lineas posibles: " << nLineasPosibles << std::endl; 
+    std::cout << "Numero de lineas minimas"<< nLineasMinimas << std::endl;
+
+
+    //Apo que va a almacenar todas las lineas posibles
+    Apo<LineaAerea> apo(LineasPosibles);
+
+    //Rellenamos el apo con todas las lineas posibles da igual que nos valgan o no
+    for(vertice i = 0; i <= N-1; i++){
+        for(vertice j = 0; j <= N-1; j++){
+            linea(i, j, coste) = {i, j, distancia(i, j)};
+            apo.insertar(linea); //Inserto línea en el apo
+        }
+    }
+
+    //vector solucion con las minimas lineas aereas
+    vector<LineaAerea> vector(nLineasMinimas);
+
+    //Una vez en el Apo las lineas estan ordenadas de menor a mayor
+    //Ahora vamos a ir sacando las lineas del apo y comprobando si nos valen o no
+    int lineas_actual = 0; 
+    while(lineas_actual < nLineasMinimas){
+        lineaArea actual = apo.cima();
+        apo.suprimir();
+
+        //Si tienen representante distintos es pk las lineas une ciudad de islas distintas
+        //por tanto, se mete en el vector solucion, se unen para decir que ya hay una linea con esas islas a través de las ciudades
+        //y  aumentamos el contador de las lineas actuales
+        if(p.encontrar(actual.i) != p.encontrar(actual.j)){
+            vector.push_back(actual);
+            p.unir(p.encontrar(actual.i), p.encontrar(actual.j));
+            lineas_actual++;
+        }
+    }
+
+    return vector;
+}
+
+
+/*6. La empresa EMASAJER S.A. tiene que unir mediante canales todas las ciudades del
+valle del Jerte (Cáceres), teniendo en cuenta las siguientes premisas:
+− El coste de abrir cada nuevo canal es casi prohibitivo, luego la solución final debe
+tener un número mínimo de canales.
+− El Ministerio de Fomento nos subvenciona por m3 /sg de caudal, luego el conjunto
+de los canales debe admitir el mayor caudal posible, pero por otra parte, el coste
+de abrir cada canal es proporcional a su longitud, por lo que el conjunto de los
+canales también debería medir lo menos posible. Así pues, la solución óptima
+debería combinar adecuadamente ambos factores.
+Dada la matriz de distancias entre las diferentes ciudades del valle del Jerte, otra
+matriz con los diferentes caudales máximos admisibles entre estas ciudades teniendo en
+cuenta su orografía, la subvención que nos da Fomento por m3 /sg. de caudal y el coste
+por km. de canal, implementen un subprograma que calcule qué canales y de qué
+longitud y caudal deben construirse para minimizar el coste total de la red de canales.
+*/
+
+template <typename tCoste>
+
+GrafoP<tCoste> ejercicio6(const GrafoP<tCoste> &distancias, const GrafoP<size_t> &caudal, double subvenecion, tCoste coste){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    size_t N = distancias.numVert();
+
+    GrafoP<tCoste> g(N);
+
+    for(vertice i = 0; i < N; i++){
+        for(vertice j = 0; j < N, j++){
+            g[i][j] = (distancias[i][j] * coste)-(caudal[i][j] * subvencion);
+        }
+    }
+
+    return Kruskal(g);
+}
+
+/*7. El archipiélago de Grecoland (Zuelandia) está formado únicamente por dos islas,
+Fobos y Deimos, que tienen N1 y N2 ciudades, respectivamente, de las cuales C1 y C2
+ciudades son costeras (obviamente C1 ≤ N1 y C2 ≤ N2 ). Se dispone de las coordenadas
+cartesianas (x, y) de todas y cada una de las ciudades del archipiélago. El huracán
+Isadore acaba de devastar el archipiélago, con lo que todas las carreteras y puentes
+construidos en su día han desaparecido. En esta terrible situación se pide ayuda a la
+ONU, que acepta reconstruir el archipiélago (es decir volver a comunicar todas las
+ciudades del archipiélago) siempre que se haga al mínimo coste.
+ De cara a poder comparar costes de posibles reconstrucciones se asume lo
+siguiente:
+1. El coste de construir cualquier carretera o cualquier puente es proporcional a su
+longitud (distancia euclídea entre las poblaciones de inicio y fin de la carretera o
+del puente).
+2. Cualquier puente que se construya siempre será más caro que cualquier carretera
+que se construya.
+ De cara a poder calcular los costes de VIAJAR entre cualquier ciudad del
+archipiélago se considerará lo siguiente:
+1. El coste directo de viajar, es decir de utilización de una carretera o de un puente,
+coincidirá con su longitud (distancia euclídea entre las poblaciones origen y
+destino de la carretera o del puente).
+ En estas condiciones, implementa un subprograma que calcule el coste mínimo
+de viajar entre dos ciudades de Grecoland, origen y destino, después de haberse
+reconstruido el archipiélago, dados los siguientes datos:
+1. Lista de ciudades de Fobos representadas mediante sus coordenadas cartesianas.
+2. Lista de ciudades de Deimos representadas mediante sus coordenadas
+cartesianas.
+3. Lista de ciudades costeras de Fobos.
+4. Lista de ciudades costeras de Deimos.
+5. Ciudad origen del viaje.
+6. Ciudad destino del viaje.
+*/
+struct ciudad
+{
+    double x, y;
+    ciudad(double x_, double y_) : x(x_), y(y_){};
+};
+
+struct puente
+{
+    ciudad a, b;
+    double coste;
+};
+
+tCoste distancia(ciudad c1, ciudad c2){
+    return sqrt(pow(c1.a - c2.a,2) + pow(c1.b - c2.b, 2));
+}
+
+puente puenteCosteMinimo(vector<ciudad> fobos, vector<ciudad> deimos, vector<vertice> costaFobos,
+     vector<vertice> costaDeimos)
+{
+    puente puenteMin;
+    puenteMin.fobos = 0;
+    puenteMin.deimos = 0;
+    puenteMin.coste = GrafoP<double>::INFINITO;
+    for (int i = 0; i < costaFobos.size(); ++i)
+        for (int j = 0; j < costaDeimos.size(); ++j)
+        {
+            double coste = distancia(fobos[costaFobos[i]], deimos[costaDeimos[j]]);
+            if (coste < puenteMin.coste)
+            {
+                puenteMin.coste = coste;
+                puenteMin.fobos = costaFobos[i];
+                puenteMin.deimos = costaDeimos[i];
+            }
+        }
+    return puenteMin;
+}
+
+
+template <typename tCoste>
+tCoste Grecoland(const vector<ciudad> Fobos, const vector<ciudad> Deimos, const vector<vertice> costerasFobos, 
+                const vector<vertice> costerasDeimos, vertice origen, vertice destino){
+    size_t Nf = Fobos.size();
+    size_t Nd = Deimos.size();
+    size_t  N = Nf + Nd;
+
+    GrafoP<tCoste> sGrafo (N);
+    //Carreteras de fobos
+    for(vertice i = 0; i < Nf; i++){
+        for(vertice j = 0; j < Nf, j++){
+            sGrafo[i][j] = distancia(Fobos[i],Fobos[j]);
+        }
+    }
+    //Carretera de Deimos
+    for(vertice i = Nf; i < N; i++){
+        for(vertice j = Nf; j < N, j++){
+            sGrafo[i][j] = distancia(Deimos[i],Deimos[j]);
+        }
+    }
+
+    //Hacemos los puentes
+    for(vertice i = 0; i < Nf; i++){
+        for(vertice j = Nf; j < N, j++){
+            sGrafo[i][j] = distancia(Fobos[i],Deimos[j]);
+        }
+    }
+
+
+    puente puente = puenteCosteMinimo(Fobos, Deimos, costerasFobos, costerasDeimos);
+    archipielago[puente.fobos][puente.deimos + Fobos.size()] = archipielago[puente.deimos + Fobos.size()][puente.fobos] = puente.coste;
+
+    vector<vertice> vVer;
+    vector<double> costes = Dijkstra(archipielago, origen, vVer);
+    std::cout << costes[destino];
+
+}
