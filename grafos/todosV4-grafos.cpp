@@ -569,3 +569,316 @@ tCoste ejercicio10(typename GrafoP<tCoste>::vertice origen, typename GrafoP<tCos
     for(auto i = sol.camino.primera(); i != sol.camino.fin(); i = sol.camino.siguiente(i)){
         sol.camino.elemento(i) = sol.camino.elemento(i) % N;
     }
+
+    return sol;
+}
+
+
+/*Ejercicio 11: Disponemos de tres grafos (matriz de costes) que representan los costes directos de 
+viajar entre las ciudades de tres de las islas del archipiélago de las Huríes (Zuelandia). 
+Para poder viajar de una isla a otra se dispone de una serie de puentes que conectan 
+ciudades de las diferentes islas a un precio francamente asequible (por decisión del 
+Prefecto de las Huríes, el uso de los puentes es absolutamente gratuito). 
+Si el alumno desea simplificar el problema, puede numerar las N1 ciudades de la isla 
+1, del 0 al N1-1, las N2 ciudades de la isla 2, del N1 al N1+N2-1, y las N3 de la última, del 
+N1+ N2 al N1+N2+ N3-1. 
+Disponiendo de las tres matrices de costes directos de viajar dentro de cada una de 
+las islas, y la lista de puentes entre ciudades de las mismas, calculad los costes mínimos 
+de viajar entre cualesquiera dos ciudades de estas tres islas. 
+¡¡¡ QUE DISFRUTÉIS EL VIAJE !!!*/
+template <typename tCoste>
+
+struct puente{
+    typedef typename GrafoP<tCoste>::vertice ciudad;
+    ciudad a, b;
+};
+
+matriz<tCoste> ejercicio11(const std::vector<puente> &puentes, const GrafoP<tCoste> &G1, const GrafoP<tCoste> &G2, const GrafoP<tCoste> &G3){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    const size_t N1 = G1.numVert();
+    const size_t N2 = G2.numVert();
+    const size_t N3 = G3.numVert();
+
+    const size_t NT = N1 + N2 + N3;
+    GrafoP<tCoste> grafo_unido(NT);
+
+    for(vertice i = 0; i < N1; i++){
+        for(vertice j = 0; j < N1; j++){
+            grafo_unido[i][j] = G1[i][j];
+        }
+    }
+
+    for(vertice i = N1; i < N1 + N2; i++){
+        for(vertice j = N1; j < N1 + N2; j++){
+            grafo_unido[i][j] = G2[i][j];
+        }
+    }
+
+    for(vertice i = N1 + N2; i < NT; i++){
+        for(vertice j = N1 + N2; j < NT; j++){
+            grafo_unido[i][j] = G3[i][j];
+        }
+    }
+
+    for(auto i = 0; i < puentes.size(); i++){
+        grafo_unido[puentes[i].a][puentes[i].b] = grafo_unido[puentes[i].b][puentes[i].a] = 0;
+    }
+
+    matriz<tCoste> mCostes;
+    matriz<vertice> P;
+
+    mCostes = Floyd(grafo_unido, P);
+
+    return mCostes;
+}
+
+/*Ejercicio 12: El archipiélago de Grecoland (Zuelandia) está formado únicamente por dos islas, 
+Fobos y Deimos, que tienen N1 y N2 ciudades, respectivamente, de las cuales C1 y C2
+ciudades son costeras (obviamente C1 ≤ N1 y C2 ≤ N2). Se desea construir un puente 
+que una ambas islas. Nuestro problema es elegir el puente a construir entre todos los 
+posibles, sabiendo que el coste de construcción del puente se considera irrelevante. Por 
+tanto, escogeremos aquel puente que minimice el coste global de viajar entre todas las 
+ciudades de las dos islas, teniendo en cuenta las siguientes premisas: 
+    1. Se asume que el coste viajar entre las dos ciudades que una el puente es 0. 
+    2. Para poder plantearse las mejoras en el transporte que implica la construcción de 
+    un puente frente a cualquier otro, se asume que se realizarán exactamente el 
+    mismo número de viajes entre cualesquiera ciudades del archipiélago. Por 
+    ejemplo, se considerará que el número de viajes entre la ciudad P de Fobos y la 
+    Q de Deimos será el mismo que entre las ciudades R y S de la misma isla. Dicho 
+    de otra forma, todos los posibles trayectos a realizar dentro del archipiélago son 
+    igual de importantes. 
+Dadas las matrices de costes directos de Fobos y Deimos y las listas de ciudades 
+costeras de ambas islas, implementa un subprograma que calcule las dos ciudades que 
+unirá el puente.*/
+
+struct puente{
+    typedef typename GrafoP<tCoste>::vertice ciudad;
+    ciudad a, b;
+}
+
+template <typename tCoste>
+
+puente ejercicio12(std::vector<bool> costeras_fobos, std::vector<bool> costeras_deimo, const GrafoP<tCoste> fobos, const GrafoP<tCoste> deimos){
+    typdef typename GrafoP<tCoste>::vertice vertice;
+    const size_t Nf = fobos.numVert();
+    const size_t Nd = deimos.numVert();
+    const size_t Cf = costeras_fobos.size();
+    const size_t Cd = costeras_deimos.size();
+    const size_t NT = Nf + Nd;
+
+    matriz<tCoste> mCostesF;
+    matriz<vertice> PF;
+    matriz<tCoste> mCostesD;
+    matriz<vertice> PD;
+
+    mCostesF = Floyd(fobos, PF);
+    tCoste minFobos = INF;
+    vertice vMinFobos;
+    for(vertice i = 0; i < Cf; i++){
+        if(costeras_fobos[i]){
+            tCoste aux = 0;
+            for(vertice j = 0; j < Nf; j++){
+                aux += mCostesF[i][j];
+            }
+            if(aux < minFobos){
+                vMinFobos = i;
+                minFobos = aux;
+            }
+        }
+    }  
+
+    mCostesD = Floyd(deimos, PD);
+    tCoste minDeimos = INF;
+    vertice vMinDeimos;
+    for(vertice i = 0; i < Cd; i++){
+        if(costeras_deimos[i]){
+            tCoste aux = 0;
+            for(vertice j = 0; j < Nd; j++){
+                aux += mCostesD[i][j];
+            }
+            if(aux < minDeimos){
+                vMinDeimos = i;
+                minDeimos = aux;
+            }
+        }
+    }
+
+    puente sol;
+    sol.a = vMinFobos;
+    sol.b = vMinDeimos;
+
+    return sol;
+}
+
+/*Ejercicio 13: El archipiélago de las Huríes acaba de ser devastado por un maremoto de 
+dimensiones desconocidas hasta la fecha. La primera consecuencia ha sido que todos y 
+cada uno de los puentes que unían las diferentes ciudades de las tres islas han sido 
+destruidos. En misión de urgencia las Naciones Unidas han decidido construir el 
+mínimo número de puentes que permitan unir las tres islas. Asumiendo que el coste de 
+construcción de los puentes implicados los pagará la ONU, por lo que se considera 
+irrelevante, nuestro problema es decidir qué puentes deben construirse. Las tres islas de 
+las Huríes tienen respectivamente N1, N2 y N3 ciudades, de las cuales C1, C2 y C3 son 
+costeras (obviamente C1 ≤ N1 , C2 ≤ N2 y C3 ≤ N3) . Nuestro problema es elegir los 
+puentes a construir entre todos los posibles. Por tanto, escogeremos aquellos puentes 
+que minimicen el coste global de viajar entre todas las ciudades de las tres islas, 
+teniendo en cuenta las siguientes premisas: 
+    1. Se asume que el coste viajar entre las ciudades que unan los puentes es 0. 
+    2. La ONU subvencionará únicamente el número mínimo de puentes necesario 
+    para comunicar las tres islas.
+    3. Para poder plantearse las mejoras en el transporte que implica la construcción de 
+    un puente frente a cualquier otro, se asume que se realizarán exactamente el 
+    mismo número de viajes entre cualesquiera ciudades del archipélago. Dicho de 
+    otra forma, todos los posibles trayectos a realizar dentro del archipiélago son 
+    igual de importantes. 
+Dadas las matrices de costes directos de las tres islas y las listas de ciudades costeras 
+del archipiélago, implementad un subprograma que calcule los puentes a construir en las 
+condiciones anteriormente descritas. */
+
+
+struct puente{
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    vertice a, b;
+}
+
+std::vector<puente> ejercicio13(const std::vector<vertice> costeras_i1, const std::vector<vertice> costeras_i2, const std::vector<vertice> costeras_i3, const GrafoP<tCoste> G1, const GrafoP<tCoste> G2, const GrafoP<tCoste> G3){
+        typedef typename GrafoP<tCoste>::vertice vertice;
+    static const INF = GrafoP<tCoste>::INFINITO;
+    const size_t n_i1 = G1.numVert(), n_i2 = G2.numvert(), n3_i3 = G3.numVert();
+
+    std::matriz<vertice> P1;
+    std::matriz<tCoste> i1_floyd = Floyd(G1, P1);
+
+    std::matriz<vertice> P2;
+    std::matriz<tCoste> i2_floyd = Floyd(G2, P2);
+
+    std::matriz<vertice> P3;
+    std::matriz<tCoste> i3_floyd = Floyd(G3, P3);
+
+    //Isla 1
+    tCoste mejor_coste = INF;
+    vertice mejor_ciudad_i1;
+
+    for(auto i = 0; i < costeras_i1.size(); i++){
+        tCoste aux;
+        for(auto j=0; j < n_i1; j++){
+            aux += i1_floyd[i][j]; 
+        }
+        if(aux < mejor_coste){
+            mejor_coste = aux;
+            mejor_ciudad_i1 = i;
+        }
+    }
+
+    //Isla 2
+    tCoste mejor_coste = INF;
+    vertice mejor_ciudad_i2;
+
+    for(auto i = 0; i < costeras_i2.size(); i++){
+        tCoste aux;
+        for(auto j=0; j < n_i2; j++){
+            aux += i2_floyd[i][j]; 
+        }
+        if(aux < mejor_coste){
+            mejor_coste = aux;
+            mejor_ciudad_i2 = i;
+        }
+    }
+
+    //Isla d3
+    tCoste mejor_coste = INF;
+    vertice mejor_ciudad_i3;
+
+    for(auto i = 0; i < costeras_id3.size(); i++){
+        tCoste aux;
+        for(auto j=0; j < n_i3; j++){
+            aux += id3_floyd[i][j]; 
+        }
+        if(aux < mejor_coste){
+            mejor_coste = aux;
+            mejor_ciudad_id3 = i;
+        }
+    }
+
+    puente p1;
+    p1.a = mejor_ciudad_i1;
+    p1.b = mejor_ciudad_i2;
+
+    puente p2;
+    p2.a = mejor_ciudad_i2;
+    p2.b = mejor_ciudad_i3;
+
+    puente dos_puentes[2] = {p1, p2};
+
+    return dos_puentes;
+}
+
+//--------------------------------------PRACTICA 8 ------------------------------------------------------------------
+/*1. El archipiélago de Tombuctú, está formado por un número indeterminado de islas,
+cada una de las cuales tiene, a su vez, un número indeterminado de ciudades. En
+cambio, sí es conocido el número total de ciudades de Tombuctú (podemos llamarlo N,
+por ejemplo).
+Dentro de cada una de las islas existen carreteras que permiten viajar entre todas
+las ciudades de la isla. Se dispone de las coordenadas cartesianas (x, y) de todas y cada
+una de las ciudades del archipiélago. Se dispone de un grafo (matriz de adyacencia) en
+el que se indica si existe carretera directa entre cualesquiera dos ciudades del
+archipiélago. El objetivo de nuestro problema es encontrar qué ciudades de Tombuctú
+pertenecen a cada una de las islas del mismo y cuál es el coste mínimo de viajar entre
+cualesquiera dos ciudades de una misma isla de Tombuctú.
+Así pues, dados los siguientes datos:
+- Lista de ciudades de Tombuctú representada cada una de ellas por sus
+coordenadas cartesianas.
+- Matriz de adyacencia de Tombuctú, que indica las carreteras existentes en
+dicho archipiélago.
+Implementen un subprograma que calcule y devuelva la distribución en islas de las
+ciudades de Tombuctú, así como el coste mínimo de viajar entre cualesquiera dos
+ciudades de una misma isla del archipiélago.*/
+
+template <typename tCoste>
+struct solucion{
+    particion p;
+    matriz<tCoste> mCostes;
+};
+
+struct ciudad{
+    double x, y;
+};
+
+template <typename tCoste>
+tCoste distancia(ciudad c1, ciudad c2){
+    return sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
+}
+
+template <typename tCoste>
+solucion ejercicio1(vector<coordenadas> vector, matriz<bool> mAdyacencia){
+    size_t N = mAdyacencia.size();
+
+    //Creamos la particion
+    particion p(N);
+
+
+    //Pasamos de matriz de adyacencia a matriz de costes y rellena la particion
+    matriz<tCoste> mCostes(N);
+    for(int i = 0 ; i < N; i++){
+        for(int j = 0; j < N; j++){
+            if(mAdyacencia[i][j]){
+                mCostes[i][j] = distancia(vector[i], vector[j]);
+                
+                //!DUDA DE SI ESTO ESTA BIEN
+                if(p.encontrar(i) != p.encontrar(j)){
+                    p.unir(p.encontrar(i), p.encontrar(j));
+                
+            }
+            else{
+                mCostes[i][j] = GrafoP<tCoste>::INFINITO;
+            }
+        }
+    }
+
+    //Aplicamos Floyd
+    matriz<vertice> P;
+    matriz<tCoste> mCostesFloyd(N);
+    mCostesFLoyd = Floyd(mCostes, P);
+
+
+    return solucion{p, mCostesFloyd};
+}

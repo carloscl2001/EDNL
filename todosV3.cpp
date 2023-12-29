@@ -1561,37 +1561,31 @@ puente ejercicio12(std::vector<typename GrafoP<tCoste>::vertice> costeras_fobos,
     tCoste coste_min_fobos = INF;
     vertice mejor_costera_fobos;
 
-    for(vertice i = 0; i < N_fobos; i++){
-        for(auto j = 0; j < costeras_fobos.size(); j++){
-            if(i = costeras_fobos[j]){
-                tCoste aux =0;
-                for(vertice k = 0; k < N_fobos; k++){
-                    aux += aux, fobos_floyd[j][k];
-                }
-                if(aux < coste_min_fobos){
-                    coste_min_fobos = aux;
-                    mejor_costera_fobos = j;
-                }
-            }
+    
+    for(auto i = 0; i < costeras_fobos.size(); i++){
+        tCoste aux = 0;
+        for(vertice j = 0; j < N_fobos; j++){
+            aux += fobos_floyd[i][j];
+        }
+        if(aux < coste_min_fobos){
+            coste_min_fobos = aux;
+            mejor_costera_fobos = i;
         }
     }
+    
 
     //Buscamos la ciudad costera con menos tCoste para luego unirla a la de Foos
     tCoste coste_min_deimos = INF;
     vertice mejor_costera_deimos;
 
-    for(vertice i = 0; i < N_Deimos; i++){
-        for(auto j = 0; j < costeras_deimos.size(); j++){
-            if(i = costeras_deimos[j]){
-                tCoste aux =0;
-                for(vertice k = 0; k < N_deimos; k++){
-                    aux += aux, deimos_floyd[j][k];
-                }
-                if(aux < coste_min_deimos){
-                    coste_min_deimos = aux;
-                    mejor_costera_deimos = j;
-                }
-            }
+    for(auto i = 0; i < costeras_deimos.size(); i++){
+        tCoste aux = 0;
+        for(vertice j = 0; j < N_deimos; j++){
+            aux += deimos_floyd[i][j];
+        }
+        if(aux < coste_min_deimos){
+            coste_min_deimos = aux;
+            mejor_costera_deimos = i;
         }
     }
 
