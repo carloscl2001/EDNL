@@ -741,7 +741,7 @@ struct puente{
 }
 
 std::vector<puente> ejercicio13(const std::vector<vertice> costeras_i1, const std::vector<vertice> costeras_i2, const std::vector<vertice> costeras_i3, const GrafoP<tCoste> G1, const GrafoP<tCoste> G2, const GrafoP<tCoste> G3){
-        typedef typename GrafoP<tCoste>::vertice vertice;
+    typedef typename GrafoP<tCoste>::vertice vertice;
     static const INF = GrafoP<tCoste>::INFINITO;
     const size_t n_i1 = G1.numVert(), n_i2 = G2.numvert(), n3_i3 = G3.numVert();
 

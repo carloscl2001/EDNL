@@ -85,15 +85,15 @@ bool pseudocompleto(const Abin<T> &A){
 
 template <typename T>
 bool pseudocompleto_rec(typename Abin<T>::nodo n, const Abin<T> &A){
-    if(n == abin<t>::NODO_NULO){
+    if(n == Abin<T>::NODO_NULO){
         return true;
     }
     else{
         if(profundidadArbolB_rec(n, A) == alturaArbol(A) - 1){
-            if(A.hijoDrcho(n) == Abin<T>::NODO_NULO || A.hijoIzqdo(n) == Abin<T>::NODO_NULO){
+            if(A.hijoDrcho(n) == Abin<T>::NODO_NULO && A.hijoIzqdo(n) == Abin<T>::NODO_NULO){
                 return true;
             }
-            else if(A.hijoDrcho(n) != Abin<T>::NODO_NULO || A.hijoIzqdo(n) 1= Abin<T>::NODO_NULO){
+            else if(A.hijoDrcho(n) != Abin<T>::NODO_NULO && A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
                 return true;
             }
             else{
