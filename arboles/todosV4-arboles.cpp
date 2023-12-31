@@ -108,5 +108,64 @@ int numNostalgiscos(const Abin<T>& A){
 
 template <typename T>
 int numNostalgiscosRec(typename Abin<T>::nodo n, const Abin<T>& A){
-    
+    if(n == Abin<T>::NODO_NULO){
+        return 0;
+    }else{
+        if(profunididadNodo(n,A) > decendientes(n,A))
+            return 1 + numNostalgiscosRec(A.hijoIzqdo(n),A) + numNostalgiscosRec(A.hijoDrcho(n),A);
+        else
+            return numNostalgiscosRec(A.hijoIzqdo(n),A) + numNostalgiscosRec(A.hijoDrcho(n),A);
+    }
 }
+
+template <typename T>
+int descendientes(typename Abin<T>::nodo n, const Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        return 1 + contar_descendientes(A.hijoIzqdo(n), A) + contar_descendientes(A.hijoDrcho(n), A);
+    }
+}
+
+
+//Calcula el indice de prosperidad de una poblacion, calcula el porcentaje de nodos prosperos, el elemento del nodo nos indica la 
+//riqueza, se considera que un nodo es prospero cuando su dinero es mayor que el de sus antecesores propios y su dinero es menor que sus 
+//descendientes propios.
+template <typename T>
+float prosperidadAbin(const Abin<T>& A){
+    return numNodosProsperos(A.raiz(n),A)/contarNodos(A) * 100;
+}
+
+template <typename T>
+int numNodosProsperos(typename Abin<T>::nnodo n, Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO || n == A.raiz()){
+        return 0;
+    }else{
+        if(A.elemento(A.padre(n)) < A.elemento(n) && A.elemento(n) < dinero_Hijos(n,A))
+            return 1 + numNodosProsperos(A.hijoIzqdo(n),A) + numNodosProsperos(A.hijoDrcho(n),A);
+        else
+            return numNodosProsperos(A.hijoIzqdo(n),A) + numNodosProsperos(A.hijoDrcho(n),A);
+    }
+}
+
+template <typename T>
+int dinero_Hijos(typename Abin<T>::NODO n, const Abin<T> &A){
+    if(A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        if(A.hijoDrcho(n) == Abin<T>::NODO_NULO){
+            return A.elemento(A.hijoIzqdo(n));
+        }
+        else if(A.hijoIzqdo(n) == Abin<T>::NODO_NULO){
+            return A.elemento(A.hijoDrcho(n));
+        }
+        else{
+            return A.elemento(A.hijoIzqdo(n)) +  A.elemento(A.hijoDrcho(n));
+        }
+    }
+}
+
+
+//Contar nodos verdes (aquellos que tienen 4 o mas descendientes)
