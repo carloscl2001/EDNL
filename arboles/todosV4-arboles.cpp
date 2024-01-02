@@ -1,7 +1,9 @@
 #include "arbol.h"
+#include "agenDinamica.h"
 #include <cassert>
 #include <iostream>
 #include <fstream>
+using namespace std;
 
 //------------------------------------------//
 //                  ARBOLES                 //
@@ -169,3 +171,172 @@ int dinero_Hijos(typename Abin<T>::NODO n, const Abin<T> &A){
 
 
 //Contar nodos verdes (aquellos que tienen 4 o mas descendientes)
+template <typename T>
+int contarVerdes(const Abin<T>& A){
+    return contarVerdesRec(A.raiz(),A);
+}
+
+template <typename T>
+int contarVerdesRec(typename Abin<T>::nodo n, Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO)
+        return 0;
+    else
+        if(numDescenientes(n,A) - 1 >= 4)
+            return 1 + contarVerdesRec(A.hijoIzqdo(n),A) + contarVerdesRec(A.hijoDrcho(n),B);
+        else
+            return contarVerdesRec(A.hijoIzqdo(n),A) + contarVerdesRec(A.hijoDrcho(n),B);
+}
+
+template <typename T>
+int numDescenientes(typename Abin<T>::nodo n, Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO)
+        return 0;
+    else 
+        return 1 + numDescenientes(A.hijoIzqdo(n),A) + numDescenientes(A.hijoDrcho(n,A));
+}
+
+
+//Contar los nodos que tengan 3 nietos
+template <typename T>
+int contarNietosRec(const Abin<T>& A){
+    return contarNietosRec(A.raiz(),A);
+}
+
+template <typename T>
+int contarNietosRec(typename Abin<T>::nodo n, Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO)
+        return 0;
+    else
+        if(TresNietos(n,A) == 3)
+            return 1 + contarNietosRec(A.hijoIzqdo(n),A) + contarNietosRec(A.hijoDrcho(n),B);
+        else
+            return contarNietosRec(A.hijoIzqdo(n),A) + contarNietosRec(A.hijoDrcho(n),B);
+}
+
+template <typename T>
+int TresNietos(typename Abin<T>::nodo n, Abin<T>& A){
+    return contarHijos(A.hijoIzqdo(n),A) + contarHijos(A.hijoDrcho(n),A);
+}
+
+template <typename T>
+int contarHijos(typename Abin<T>::nodo n, Abin<T>& A){
+    if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO && A.hijoDrcho(n) != Abin<T>::NODO_NULO)
+        return 2;
+    else if(A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO)
+        return 0;
+    else 
+        return 1;
+}
+
+
+//------------------------Generales----------------------------------------------------------------------------------------
+
+//Implementa un subprograma que dado un árbol general nos calcule su grado (numero maximo de hijos que tiene un arbol)
+template <typename T>
+int grado(const Agen<T>& A){
+    return gradoAgen(A.raiz(),A);
+}
+template <typename T>
+int gradoAgen(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO)
+        return 0;
+    else{
+        int gradoMax = 0;
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO){
+            gradoMax = contarHijos(n,A);
+            //gradoMax = contarHijos(A.hijoIzqdo(n),A);
+            gradoMax = max(gradoMax, gradoAgen(A.hijoIzqdo(n),A), gradoAgen(A.hermDrcho(n),A));
+            hijo = A.hermDrcho(hijo);
+        }
+    }
+}
+
+template <typename T>
+int contarHijos(typename Agen<T>::nodo n, const Agen<T>& A){
+    typename Agen<T>::nodo hijo;
+    hijo = A.hijoIzqdo(n);
+    if(hijo == Agen<T>::NODO_NULO){
+        return 0;
+    }else{
+        int numHijos = 0;
+        while(hijo != Agen<T>::NODO_NULO){
+            numHijos++;
+            hijo = A.hermDrcho(hijo);
+        }
+        return numHijos;
+    }
+}
+
+
+template <typename T>
+int contarHijosAle(typename Agen<T>::nodo n, const Agen<T>& A){
+    if( n == Agen<T>::NODO_NULO)
+        return 0;
+    else{
+        return 1 + contarHijosAle(A.hermDrcho(n),A);
+    }
+}
+
+
+//Se define el desequilibrio de un árbol general como la máxima diferencia entre las alturas
+//de los subárboles más bajo y más alto de cada nivel. Implementa un subprograma que calcule
+//el grado de desequilibrio de un árbol general.
+template <typename T>
+int desequilibrioAgen(const Agen<T>& A){
+    return desequilibrioAgenRec(A.raiz(),A);
+}
+
+template <typename T>
+int desequilibrioAgenRec(typename Agen<T>::nodo n, const Agen<T>& A){
+{
+    if(n == Agen<T>::NODO_NULO)
+        return 0;
+    else
+    {
+        unsigned desequilibrioMax = 0, alturaMinima = alturaMin(n, A), desNodo = std::fabs(alturaAgen(n, A) - alturaMinima );
+        typename Agen<T>::nodo hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO)
+        {
+            desequilibrioMax = std::max(desNodo, desequilibrioRec(hijo, A));
+            hijo = A.hermDrcho(hijo);
+        }
+        return desequilibrioMax;
+    }
+}
+
+}
+
+template <typename T>
+int alturaAgen(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO)
+        return -1;
+    else{
+        int altura = 0;
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO){
+            altura = max(altura, alturaAgen(hijo,A));
+            hijo = A.hermDrcho(n);
+        }
+        return 1 + altura;
+    }   
+}
+
+template <typename T>
+int alturaMin(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO)
+        return -1;
+    else{
+        int altura = 0;
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO){
+            altura = min(altura, alturaAgen(hijo,A));
+            hijo = A.hermDrcho(n);
+        }
+        return 1 + altura;
+    }   
+}
+
