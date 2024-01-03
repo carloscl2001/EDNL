@@ -340,3 +340,233 @@ int alturaMin(typename Agen<T>::nodo n, const Agen<T>& A){
     }   
 }
 
+
+//Ejercicio 4: Dado un árbol general de enteros A y un entero x, implementa un subprograma que realice
+//la poda de A a partir de x. Se asume que no hay elementos repetidos en A.
+template <typename T>
+void podaAgen(Agen<T>& A, T x){
+    podaAgenRec(A.raiz(),A, x);
+}
+
+template <typename T>
+void podaAgenRec(typename Agen<T>::nodo n, Agen<T>& A, T x){
+    if(n != Agen<T>::NODO_NULO){
+        if(A.elemento(n) == x){
+            eliminarSubarbol(n,A);
+        }else{
+            typename Agen<T>::nodo hijo;
+            hijo = A.hijoIzqdo(n);
+            while(hijo != Agen<T>::NODO_NULO){
+                podaAgenRec(hijo,A);
+                hijo = A.hermDrcho(hijo);
+            }
+        }
+        
+    }
+}
+//sin eliminar el nodo x
+template <typename T>
+void eliminarSubarbol(typename Agen<T>::nodo n, Agen<T>& A){
+    if(n != Agen<T>::NODO_NULO){
+        //nodo sea hoja
+        if(A.hijoIzqdo(n) == Agen<T>::NODO_NULO){
+            A.eliminarHijoIzqdo(A.padre(n),A);
+        }
+        //no es hoja
+        else{
+            typename Agen<T>::nodo hijo;
+            hijo = A.hijoIzqdo(n);
+            while(hijo != Agen<T>::NODO_NULO){
+                eliminarSubarbol(hijo,A);
+                hijo = A.hermDrcho(hijo);
+            }
+        }
+    }
+}
+ //eliminando el nodo x
+template <typename T>
+void eliminarSubarbol(typename Agen<T>::nodo n, Agen<T>& A, T x){
+    if(n != Agen<T>::NODO_NULO){
+        //nodo sea hoja
+        if(A.hijoIzqdo(n) == Agen<T>::NODO_NULO){
+            A.eliminarHijoIzqdo(A.padre(n));
+        }
+        //no es hoja
+        else{
+            typename Agen<T>::nodo hijo;
+            hijo = A.hijoIzqdo(n);
+            while(hijo != Agen<T>::NODO_NULO){
+                eliminarSubarbol(hijo,A);
+                hijo = A.hermDrcho(hijo);
+            }
+            if(A.elemento(n) == x){
+                n = A.padre(n);
+                typename Agen<T>::nodo hijo;
+                hijo = A.hijoIzqdo(n);
+                if(A.elemento(hijo) == x){
+                    A.eliminarHijoIzqdo(A.padre(n));
+                }else{
+                    while(hijo != Agen<T>::NODO_NULO && A.elemento(A.hermDrcho(hijo)) != x){
+                        hijo = A.hermDrcho(hijo);
+                    }
+                    A.eliminarHermDrcho(hijo);
+                }
+                
+            }
+        }
+    }
+}
+
+
+/***Calcular densidad de un arbol
+    La densidad se define como el Grado maximo de un Arbol partido
+    del numero de nodos hojas.***/
+template <typename T>
+float densidad(const Agen<T>& A){
+    return gradoMax(A.raiz(),A)/numHojas(A.raiz(),A) * 100;
+}
+
+template <typename T>  
+int gradoMax(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }else{
+        int grado = contarHijos(n,A);
+        int contador = 0;
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO){
+            grado = max(grado, gradoMax(hijo,A));
+            hijo = A.hermDrcho(hijo);
+        }
+        return grado;
+    }
+}
+
+template <typename T>  
+int contarHojas(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }else{
+        if(A.hijoIzqdo(n) == Agen<T>::NODO_NULO){
+            return 1 + contarHojas(A.hermDrcho(n),A);
+        }else{
+            return contarHojas(A.hijoIzqdo(n),A) + contarHojas(A.hermDrcho(n),A);
+        }
+    }
+
+}
+
+
+/*
+Implementa un subprograma que devuelva el porcentaje de descendientes 
+propios de un árbol general que sean múltiplos de 3.
+*/
+template <typename T>  
+float porcentajeDescendientes(const Agen<T>& A){
+    return numDescendientesPropios(A.raiz(),A)*100/contarNodosAgen(A.raiz(),A);
+}
+
+template <typename T> 
+int numDescendientesPropios(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }else{
+        if(contarHijos(n,A) % 3 == 0)
+            return 1 + numDescendientesPropios(A.hijoIzqdo(n),A) + numDescendientesPropios(A.hermDrcho(n),A);
+        else  
+            return numDescendientesPropios(A.hijoIzqdo(n),A) + numDescendientesPropios(A.hermDrcho(n),A);
+    }
+}
+
+template <typename T> 
+int contarNodosAgen(typename Agen<T>::nodo n, const Agen<T>& A){
+    if(n == Agen<T>::NODO_NULO)
+        return 0;
+    else
+        return 1 + contarNodosAgen(A.hijoIzqdo(n),A) + contarNodosAgen(A.hermDrcho(n),A);
+}
+
+//Contar nodos verdes de un arbol general, donde un nodo verde es aquel, cuyo numero de nietos es el doble al numero de hijos
+template <typename T>
+int verdes(const Agen<T> &A){
+    return verdes_Rec(A.raiz(), A);
+}
+
+template <typename T>
+int verdes_Rec(typename Agen<T>::nodo n, const Agen<T> &A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        if(contar_nietos(A.hijoIzqdo(n), A) = 2 * contar_hijos(A.hijoIzqdo(n), A)){
+            return 1 + verdes_Rec(A.hijoIzqdo(n), A) + verdes_Rec(A.hermDrcho(n), A);
+        }
+        else{
+            return verdes_Rec(A.hijoIzqdo(n), A) + verdes_Rec(A.hermDrcho(n), A);
+        }
+    }
+}
+
+template <typename T>
+int contar_hijos(typename Agen<T>::nodo n, const Agen<T> &A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        return 1 + contar_hijos(A.hermDrcho(n), A);
+    }
+}
+
+template <typename T>
+int contar_nietos(typename Agen<T>::nodo n, const Agen<T> &A){
+    if(n == Agen<T>::NODO_NULO){
+        return 0;
+    }
+    else{
+        return contar_hijos(A.hijoIzqdo(n), A) + contar_nietos(A.hermDrcho(n), A);
+    }
+}
+
+
+// Se da un árbol general, cuyos nodos pueden estar vivos o muertos,
+// y tienen una cantidad de *riqueza*. Se pide una función que tome
+// un nodo vivo del árbol, lo ponga a muerto y redistribuya su riqueza
+// con sus herederos.
+//
+// Los herederos de un nodo son sus hijos vivos, y sus hijos muertos
+// con descendientes vivos* (importante). Cuando se tenga que distribuir
+// riquezas, se dividirán a parte siguales para todos los herederos.
+// Si se da riqueza a un nodo muerto, este proceso anterior se repite
+// con sus herederos.
+
+struct T{
+    bool vivo;
+    float dinero;
+};
+
+template <typename T>
+void herencia(typename Agen<T>::nodo n, Agen<T> &A){
+    if(n != Agen<T>::NODO_NULO){
+        A.elemento(n).vivo = false;
+        float dineroRepartir = A.elemento(n).dinero/contarHijos(n,A);
+        A.elemento(n).dinero = 0;
+        repartir(n,A,dineroRepartir);   
+    }
+    
+}
+
+template <typename T>
+void repartir(typename Agen<T>::nodo n, Agen<T> &A, float dineroRepartir){
+    if(n != Agen<T>::NODO_NULO){
+        typename Agen<T>::nodo hijo;
+        hijo = A.hijoIzqdo(n);
+        while(hijo != Agen<T>::NODO_NULO){
+            A.elemento(hijo).dinero += dineroRepartir;
+            if(A.elemento(hijo).vivo == false){
+                herencia(hijo,A);
+            }
+            hijo = A.hermDrcho(hijo);
+        }
+    }
+}

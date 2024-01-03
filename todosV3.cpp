@@ -608,7 +608,7 @@ int contar_nietos(typename Agen<T>::nodo n, const Agen<T> &A){
 // con sus herederos.
 //
 // Los herederos de un nodo son sus hijos vivos, y sus hijos muertos
-// *con descendientes vivos* (importante). Cuando se tenga que distribuir
+// con descendientes vivos* (importante). Cuando se tenga que distribuir
 // riquezas, se dividirán a parte siguales para todos los herederos.
 // Si se da riqueza a un nodo muerto, este proceso anterior se repite
 // con sus herederos.
