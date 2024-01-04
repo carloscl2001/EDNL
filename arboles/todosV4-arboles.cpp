@@ -1,8 +1,10 @@
 #include "arbol.h"
 #include "agenDinamica.h"
+#include "abb.h"
 #include <cassert>
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 //------------------------------------------//
@@ -570,3 +572,166 @@ void repartir(typename Agen<T>::nodo n, Agen<T> &A, float dineroRepartir){
         }
     }
 }
+
+
+//Ejercicio 2:Un árbol binario de búsqueda se puede equilibrar realizando el recorrido en inorden
+//del árbol para obtener el listado ordenado de sus elementos y a continuación, repartir
+//equitativamente los elementos a izquierda y derecha colocando la mediana en la raíz y
+//construyendo recursivamente los subárboles izquierdo y derecho de cada nodo.
+//Implementa este algoritmo para equilibrar un ABB.
+template <typename T>
+void equilibrarABB(Abb<T>& A){
+    std::vector<T> vector;
+    rellenarVector(vector,A);
+    Abb<T> copia;
+    rellenarABB(vector,copia);
+    A = copia;
+}
+
+template <typename T>
+void rellenarVector(vector<T>& v, const Abb<T>& A){
+    if(!A.vacio()){
+        if(A.izqdo().vacio() && A.drcho().vacio()){
+            v.push_back(A.elemento());
+        }else{
+            rellenarVector(v,A.izqdo());
+            v.push_back(A.elemento());
+            rellenarVector(v,A.drcho());
+        }
+    }
+}
+
+template <typename T>
+void rellenarABB(vector<T>& v, Abb<T>& A){
+    T tamano = vector.size();
+    std::vector mitad_izqda<T>;
+    std::vector mitad_drcha<T>;
+
+    for(int i = 0; i < tamano; i++){
+        if(i < tamano/2 - 1){
+            mitad_izqda.emplace_back(vector[i]);
+        }
+        else if(i == tamano/2 - 1){
+            nuevo.insertar(vector[i]);
+        }
+        else{
+            mitad_drcha.emplace_back(vector[i]);
+        }
+    }
+
+    rellenarAbb(mitad_izqda, nuevo);
+    rellenarAbb(mitad_drcha, nuevo);
+}
+
+//Ejercicio 3:
+//Dados dos conjuntos representados mediante árboles binarios de búsqueda,
+//implementa la operación unión de dos conjuntos que devuelva como resultado otro
+//conjunto que sea la unión de ambos, representado por un ABB equilibrado.
+
+
+template <typename T>
+Abb<T> funcion_union(const Abb<T> A, Abb<T> B){
+    Abb<T> union;
+    vector<T> vA;
+    
+    rellenarVector(vA, A);
+    for(auto it = vA.begin(); it != vA.end(); it++){
+        B.insertar(*it);
+    }
+    equilibrarABB(B);
+    union = B;
+    return union;
+}
+
+//Ejercicio 4:
+//Dados dos conjuntos representados mediante árboles binarios de 
+//búsqueda, implementa la operación intersección de dos conjuntos, que 
+//devuelva como resultado otro conjunto que sea la intersección de ambos.
+//El resultado debe quedar en un árbol equilibrado.
+template <typename T>
+Abb<T> funcion_interseccion(const Abb<T> A, Abb<T> B){
+    Abb<T> interseccion = B;
+    vector<T> vA;
+    vector<T> vB;
+
+    
+    rellenarVector(vA, A);
+    rellenarVector(vB, B);
+    for(auto it = vA.begin(); it != vA.end(); it++){
+        for(auto it2 = vB.begin(); it2 != vB.end(); it2++){
+            if(*it == *it2)
+                interseccion.insertar(*it)
+        }
+    }
+
+    equilibrarABB(interseccion);
+    return interseccion;
+}
+
+
+//Ejericio 5:
+//Implementa el operador ROMBO para conjuntos definido como 
+//A ROMBO B = (A U B) - (A n B). La implementación del operador ROMBO debe 
+//realizarse utilizando obligatoriamente la operación E, que nos indica 
+//si un elemento dado pertenece o no a un conjunto. La representación 
+//del tipo Conjunto debe ser tal que la operación de pertenencia esté en 
+//el caso promedio en O(log n).
+template <typename T>
+Abb<T> funcion_rombo(const Abb<T>& A, const Abb<T>& B)
+{
+    Abb<T> AnB, AUB, A_B;
+    AUB = union_(A, B);
+    AnB = intersec(A, B);
+    diferenciaRec(AUB, AnB, A_B);
+    A_B = equilibrio(A_B);
+    return A_B;
+}
+
+template <typename T>
+void diferenciaRec(const Abb<T>& AUB, const Abb<T>& AnB, Abb<T>& A_B)
+{
+    if(!AUB.vacio())
+    {
+        if(AnB.buscar(AUB.elemento()).vacio())
+        {
+            A_B.insertar(AUB.elemento());
+            diferenciaRec(AUB.izqdo(), AnB, A_B);
+            diferenciaRec(AUB.drcho(), AnB, A_B);
+        }
+        else
+        {
+            diferenciaRec(AUB.izqdo(), AnB, A_B);
+            diferenciaRec(AUB.drcho(), AnB, A_B);
+        }
+    }
+}
+
+
+/*
+Dado un conjunto ordenado no vacío A, se define el ínfimo de x como el mayor 
+elemento de A menor o igual que x, si existe. Análogamente, el supremo de x 
+en A, si existe, es el menor elemento de A mayor o igual que x.
+
+Implementa dos funciones de O(log n) en promedio que dados un valor x cualquiera
+y un ABB A no vacío devuelvan, respectivamente, el ínfimo y el supremo de x en A. 
+Si no existe el ínfimo de x en A, la función correspondiente devolverá el mínimo 
+de A. Así mismo, la otra función devolverá el máximo de A, en el caso de que no 
+existe el supremo.
+
+Nota: Es absolutamente necesario definir todos los tipos de datos implicados en 
+la resulución del ejercicio, así como los prototipos de las operaciones 
+utilizadas de los TADs conocidos.
+*/
+
+
+/*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios de 
+todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
+que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
+*/
+
+/*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios de 
+todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
+que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
+*/
+
+/*PODA ABIN*/
