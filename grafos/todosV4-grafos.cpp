@@ -1282,3 +1282,10 @@ El numero máximo del total de kilometros adicionales que se acepta realizar par
 
 Implementa un subprograma que calcule y devuelva el numero de km adicionales que provocaria la implantacion 
 de la medida anticontaminacion, y si debe implementarse dicha media o no */
+
+
+//AJEDREZ
+
+//LABERINTO 2D
+
+//LABERINNTO 3D

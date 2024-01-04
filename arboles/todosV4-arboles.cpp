@@ -729,9 +729,7 @@ todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
 que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
 */
 
-/*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios de 
-todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
-que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
+/*Construye una funcion que dao un Abin devuelva true si es un AVL y false en caso contrario
 */
 
 /*PODA ABIN*/
