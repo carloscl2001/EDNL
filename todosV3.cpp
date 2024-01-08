@@ -1932,7 +1932,7 @@ tCoste repartidor(const GrafoP<tCoste> grafo, double capacidad_camion, typename 
 
     std::matriz<vertice> p;
 
-    vertice posicion_actual = alamcen;
+    vertice posicion_actual = almacen;
     tCoste distancia_total = 0;
     size_t num_servidos = 0;
 

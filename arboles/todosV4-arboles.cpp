@@ -722,14 +722,45 @@ Nota: Es absolutamente necesario definir todos los tipos de datos implicados en
 la resulución del ejercicio, así como los prototipos de las operaciones 
 utilizadas de los TADs conocidos.
 */
+template <typename T>
+T infimo(const Abb<T>& A,const T x){
+    std::vector<T> v;
+    rellenarVector(A,v);
+    N = v.size();
+    
+    if(v[0] < x)
+        return v[0];
+    else{
+        if(x < v[N/2]){
+            if(v[N] <= x)
+                return v[N];
+            else{
+            
+            }
+        }
+        
+        
 
+    }
+}
+
+template <typename T>
+void rellenarVector(const Abb<T>& A,std::vector<T> v){
+    if(!A.izqdo().vacio()){
+        rellenarVector(A.izqdo(),v);
+    }
+    v.push_back(A.elemento());
+    if(!A.drcho().vacio()){
+        rellenarVector(A.drcho(),v);
+    }
+
+}
 
 /*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios de 
 todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
 que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
 */
 
+
 /*Construye una funcion que dao un Abin devuelva true si es un AVL y false en caso contrario
 */
-
-/*PODA ABIN*/

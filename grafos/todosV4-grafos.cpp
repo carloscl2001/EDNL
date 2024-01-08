@@ -1257,6 +1257,52 @@ entre los clientes y entre ellos y la central.
 3. Asumiremos que existe una función int Pedido() que devuelve el número de cajas que
 quedan por servir al cliente en el que se encuentra el repartidor.
 */
+template <typename tCoste>
+tCoste reperatido(const GrafoP<tCoste>& G, typename GrafoP<tCoste>::vertice almacen, size_t capMaxima){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    size_t N = G.NumVert();
+    size_t clientesServidos = 0;
+
+    matriz<vertice> P;
+    matriz<tCoste> mFloyd = Floyd(G,P);
+    bool servidas[N];
+    size_t capActual = capMaxima;
+    tCoste distanciaTotal = 0;
+
+    //lo preparamos para salir del almacen
+    vertice ciudadActual = almacen;
+    size_t capActual = capMaxima;
+
+    //mientras que falten clientes por servir 
+    while(clientesServidos != N - 1){
+        //mientras que tenga mateerial para repartir;
+        while(capActual > 0){
+            tCoste distancia = INF;
+            vertice destino;
+            for(int i = 0; i < N ; i++){
+                if(mFloyd[ciudadActual][i] < distancia && !servidas[i]){
+                    distancia = mFloyd[ciudadActual][i];
+                    destino = i;
+                }
+            }
+            ciudadActual = destino;
+            distanciaTotal += distancia;
+            if(Pedido(ciudadActual) <= capActual){
+                capActual -= Pedido(ciudadActual);
+                servidas[ciudadActual] = true;
+                clientesServidos++;
+            }else{
+                capActual = 0;
+            }
+        }
+        //cada vez que llega al almacen
+        distanciaTotal += mFloyd[destino][almacen];
+        vertice ciudadActual = almacen;
+        size_t capActual = capMaxima;
+    }
+
+    return distanciaTotal;
+}
 
 
 /*
@@ -1268,7 +1314,37 @@ Implemente un subprograma que dada la capital y un grafo ponderado con los km de
 carreteras existentes entre las ciudades del país, nos devuelva los caminos resultantes de
 nuestra nueva política “Sin pasar por la capital, por favor”.
 */
+template <typename tCoste>
+matriz<tCoste> latoxica(const GrafoP<tCoste>& G, typename GrafoP<tCoste>::vertice capital){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    const size_t n = G.numVert();
+    matriz<tCoste> A(n);   // matriz de costes mínimos
 
+    // Iniciar A y P con caminos directos entre cada par de vértices.
+    P = matriz<vertice>(n);
+    for (vertice i = 0; i < n; i++) {
+        A[i] = G[i];                    // copia costes del grafo
+        A[i][i] = 0;                    // diagonal a 0
+        P[i] = vector<vertice>(n, i);   // caminos directos
+    }
+    // Calcular costes mínimos y caminos correspondientes
+    // entre cualquier par de vértices i, j
+    for (vertice k = 0; k < n; k++)
+        for (vertice i = 0; i < n; i++)
+            for (vertice j = 0; j < n; j++) {
+                if(k != capital){
+                    tCoste ikj = suma(A[i][k], A[k][j]);
+                    if (ikj < A[i][j]) {
+                        A[i][j] = ikj;
+                        P[i][j] = k;
+                    }
+                }else{
+                    A[i][j] = INF;
+                    P[i][j] = k;
+                }
+            }
+    return A;
+}
 
 
 /*La capital de Zuelandia está ultimamente mas toxica que tu novia. Ante esta situacion
@@ -1282,6 +1358,34 @@ El numero máximo del total de kilometros adicionales que se acepta realizar par
 
 Implementa un subprograma que calcule y devuelva el numero de km adicionales que provocaria la implantacion 
 de la medida anticontaminacion, y si debe implementarse dicha media o no */
+template <typename tCoste>
+matriz<tCoste> latoxica(const GrafoP<tCoste>& G, typename GrafoP<tCoste>::vertice capital, size_t viajesDiarios, tCoste kmTotal){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    const size_t n = G.numVert();
+    matriz<tCoste> A(n);   // matriz de costes mínimos
+
+    // Iniciar A y P con caminos directos entre cada par de vértices.
+    P = matriz<vertice>(n);
+    for (vertice i = 0; i < n; i++) {
+        A[i] = G[i];                    // copia costes del grafo
+        A[i][i] = 0;                    // diagonal a 0
+        P[i] = vector<vertice>(n, i);   // caminos directos
+    }
+    // Calcular costes mínimos y caminos correspondientes
+    // entre cualquier par de vértices i, j
+    for (vertice k = 0; k < n; k++)
+        for (vertice i = 0; i < n; i++)
+            for (vertice j = 0; j < n; j++) {
+                if(k != capital){
+                    tCoste ikj = suma(A[i][k], A[k][j]);
+                    if (ikj < A[i][j] && ikj * viajesDiarios <= kmTotal){
+                        A[i][j] = ikj;
+                        P[i][j] = k;
+                    }
+                }
+            }
+    return A;
+}
 
 
 //AJEDREZ
