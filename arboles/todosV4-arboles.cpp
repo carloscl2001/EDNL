@@ -353,7 +353,7 @@ void podaAgen(Agen<T>& A, T x){
 template <typename T>
 void podaAgenRec(typename Agen<T>::nodo n, Agen<T>& A, T x){
     if(n != Agen<T>::NODO_NULO){
-        if(A.elemento(n) == x){
+        if(A.elemento(n) == x && !esHoja(n,A)){
             eliminarSubarbol(n,A);
         }else{
             typename Agen<T>::nodo hijo;
@@ -756,11 +756,126 @@ void rellenarVector(const Abb<T>& A,std::vector<T> v){
 
 }
 
-/*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios de 
-todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
+/*Transformar un arbol binario de tipo genérico, eliminando los descendientes propios 
+de todos aquellos nodos cuyo contenido sea, al mismo tiempo, mayor o igual
 que el de sus ascendientes propios y menor o igual que el de sus decendientes propios.
 */
+template <typename T>
+void transformarAbin(const Abin<T>& A){
+    transformarAbinRec(A.raiz(),A);
+}
+
+template <typename T>
+void transformarAbinRec(typename Abin<T>::nodo n, const Abin<T>& A){
+    if(n != Abin<T>::NODO_NULO){
+        if(A.elemento(n) >= A.elemento(A.padre(n)) && A.elemento(n) <= descendientesPropios(n,A))
+            podaAbin(n,A);
+    }
+}
+
+template <typename T>
+T descendientesPropio(typename Abin<T>::nodo n, const Abin<T>& A){
+    if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO && A.hijoDrcho(n) != Abin<T>::NODO_NULO){
+        return A.elemento(A.hijoIzqdo(n)) + A.elemento(A.hijoDrcho(n));
+    }
+    else if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
+        return A.elemento(A.hijoIzqdo(n));
+    }
+    else if(A.hijoDrcho(n) != Abin<T>::NODO_NULO){
+        return A.elemento(A.hijoDrcho(n));
+    }else{return 0;}
+}
+
+bool esHoja(typename Abin<T>::nodo n, const Abin<T>& A){
+    return true;
+}
+
+//sin eliminar el nodo que se poda
+template <typename T>
+void podaAbin(typename Abin<T>::nodo n, const Abin<T>& A){
+    
+    if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO ){
+        if(esHoja(A.hijoIzqdo(n),A)){
+            A.eliminarHijoIzqdo(n);
+        }else{
+            podaAbin(A.hijoIzqdo(n),A);
+            A.eliminarHijoIzqdo(n);
+        }
+    }
+
+
+    if(A.hijoDrcho(n) != Abin<T>::NODO_NULO ){
+        if(esHoja(A.hijoDrcho(n),A)){
+            A.eliminarHijoDrcho(n);
+        }else{
+            podaAbin(A.hijoDrcho(n),A);
+            A.eliminarHijoDrcho(n);
+        }
+    }
+}
 
 
 /*Construye una funcion que dao un Abin devuelva true si es un AVL y false en caso contrario
 */
+template <typename T>
+bool esAVL(const Abin<T>& A){
+    return esABB(A.raiz(),A) && esEquilibrado(A.raiz(),A);
+}
+
+template <typename T>
+bool esABB(typename Abin<T>::nodo n, const Abin<T>& A){
+    bool b = true;
+    std::vector<T> v;
+    rellenarVector(n,A,v);
+    int i = 0;
+    while( i < v.size() - 1 && b == true){
+        if(v[i] > v[i+1])
+            b = false;
+        i++;
+    }
+    return b;
+}
+
+
+template <typename T>
+void rellenarVector(typename Abin<T>::nodo n, const Abin<T>& A, vector<T> v){
+    if(n != Abin<T>::NODO_NULO){
+        if(A.hijoIzqdo(n) != Abin<T>::NODO_NULO){
+            rellenarVector(A.hijoIzqdo(n),A,v);
+        }
+        v.push_back(n);
+        if(A.hijoDrcho(n) != Abin<T>::NODO_NULO ){
+            rellenarVector(A.hijoDrcho(n),A,v);
+        }
+    }
+}
+
+
+template <typename T>
+bool esEquilibrado(typename Abin<T>::nodo n, const Abin<T>& A){;
+    if(abs(desequilibrioAbinRec2(n,A)) > 1)
+        return false;
+    else 
+        return true;
+}
+
+template <typename T>
+int desequilibrioAbinRec2(typename Abin<T>::nodo n, const Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO){
+        return 0;
+    }else{
+        int dese = abs(alturaArbolBin2(A.hijoIzqdo(n),A) - alturaArbolBin2(A.hijoDrcho(n),A));
+        return max(dese, desequilibrioAbinRec2(A.hijoIzqdo(n),A), desequilibrioAbinRec2(A.hijoDrcho(n),A));
+    }
+}
+
+template <typename T>
+int alturaArbolBin2(typename Abin<T>::nodo n, const Abin<T>& A){
+    if(n == Abin<T>::NODO_NULO){
+        return -1;
+    }else{
+        return  1 + max(alturaArbolBin2(A.hijoIzqdo(n),A), alturaArbolBin2(A.hijoDrcho(n),A));
+    }
+}
+
+
