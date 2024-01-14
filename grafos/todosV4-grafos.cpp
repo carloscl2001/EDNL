@@ -487,6 +487,105 @@ struct solucion
     tCoste coste_minimo;
 };
 
+template<typename tCoste>
+solucion ejercicio10_2(typename GrafoP<tCoste>::vertice origen, typename GrafoP<tCoste>::vertice destino, const tCoste coste_tren_bus, const tCoste coste_aero, const GrafoP<tCoste> &tren, const GrafoP<tCoste> &bus, const GrafoP<tCoste> &avion){
+    nT = tren.numVert();
+    nB = bus.numVert();
+    nA = avion.numVert();
+    N = nt+nb+na;
+
+    typedef typename GrafoP<tCoste>::vertice vertice;
+
+    GrafoP<tCoste> sGrafo(N);
+
+    for(size_t i = 0; i < N; i++){
+        for(size_t j = 0; j < N; j++){
+            sGrafo[i][j] = tren[i][j];
+            sGrafo[i+nT][j+nT] = bus[i][j];
+            sGrafo[i+(nB+nT)][j+(nB+nT)] = avion[i][j];
+        }
+    }
+
+    for(size_t i = 0; i < N; i++){
+        for(size_t j = 0; j < N; j++){
+            sGrafo[i][j+nT] = sGrafo[j+nT][i] = coste_tren_bus;
+            sGrafo[i][j+(nB+nT)] = sGrafo[j+(nB+nT)][j] = coste_aero;
+            sGrafo[i+nT][j+(nB+nT)] = sGrafo[j+(nB+nT)][i+nT] = coste_aereo;
+        }
+    }
+
+    matriz<tCoste> mFinal(N);
+    matriz<vertice> mVertice;
+    mFinal = Floyd(sGrafo, mVertice);
+
+    solucion sol;
+    sol.coste_camino = std::min(distancias[origen][destino],//d. bus
+             distancias[origen+N][destino+N], //d. tren
+             distancias[origen+2*N][destino+2*N], //d. avion
+             distancias[origen][destino+N], // bus-tren
+             distancias[origen+N][destino], // tren-bus
+             distancias[origen][destino+2*N], //bus-avion
+             distancias[origen+N][destino+2*N], //tren-avion
+             distancias[origen+2*N][destino+N], //avion-tren
+             distancias[origen+2*N][destino] //avion-bus
+    );
+
+    if(sol.coste_camino == distancias[origen][destino]){
+        origen = origen;
+        destino = destino;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino+N]){
+        origen = origen + N;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino+2*N]){
+        origen = origen + 2*N;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen][destino+N]){
+        origen = origen;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino]){
+        origen = origen + N;
+        destino = destino;
+    }
+    else if(sol.coste_camino == distancias[origen][destino+2*N]){
+        origen = origen;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen+N][destino+2*N]){
+        origen = origen + N;
+        destino = destino + 2*N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino+N]){
+        origen = origen + 2*N;
+        destino = destino + N;
+    }
+    else if(sol.coste_camino == distancias[origen+2*N][destino]){
+        origen = origen + 2*N;
+        destino = destino;
+    }
+
+    sol.camino = camino(origen, destino, P);
+    
+    for(auto i = sol.camino.primera(); i != sol.camino.fin(); i = sol.camino.siguiente(i)){
+        sol.camino.elemento(i) = sol.camino.elemento(i) % N;
+    }
+
+    return sol;
+
+    
+}
+
+
+template<typename tCoste>
+struct solucion
+{
+    Lista<typename GrafoP<tCoste>::vertice> camino;
+    tCoste coste_minimo;
+};
+
 template <typename tCoste>
 tCoste ejercicio10(typename GrafoP<tCoste>::vertice origen, typename GrafoP<tCoste>::vertice destino, const tCoste coste_tren_bus, const tCoste coste_aero, const GrafoP<tCoste> &tren, const GrafoP<tCoste> &bus, const GrafoP<tCoste> &avion){
     typedef typename GrafoP<tCoste>::vertice vertice;
