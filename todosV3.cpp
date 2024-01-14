@@ -1007,7 +1007,7 @@ Implementa un subprograma que dados
 calcule el camino más corto para ir de la entrada a la salida y su longitud.*/
 
 struct Celda{
-    int x, y;
+    int x, y; 
     Celda(int x_, int y_): x(x_), y(y_) {}
 }
 
@@ -1017,16 +1017,16 @@ struct Pared{
 
 template <typename tCoste>
 Celda toCelda(typename GrafoP<tCoste>::vertice v, int n){
-    return Celda(v%n, v/n);
+    return Celda(v/n, v%n);
 }
 
 template <typename tCoste>
 typename GrafoP<tCoste>::vertice toVertice(Celda c){
-    return c.i * n + c.j;
+    return c.x * n + c.y;
 }
 
 bool esAdyacente(Casilla c1, Casilla c2){
-    return (abs(c1.i - c2.i) <= 1) && (abs(c1.j - c2.j) <= 1);
+    return (abs(c1.i - c2.i) + (abs(c1.j - c2.j)) == 1);
 }
 
 GrafoP<tCoste> construir_laberinto(const size_t N, const std::vector<Pared> &paredes){

@@ -90,13 +90,78 @@ Implementa un subprograma que dados
      la casilla de entrada, y 
      la casilla de salida, 
 calcule el camino más corto para ir de la entrada a la salida y su longitud.*/
+struct solucion{
+    tCoste coste;
+    vector<casilla> camino;
+}
 
-//PARA HACER
+struct casilla{
+    double x,y;
+};
 
+struct pared{
+    casilla ca,cb;
+};
 
+typename GrafoP<tCoste>::vertice toVertice(casilla c, size_t n){
+    return c.x * n + c.y;
+}
 
+casilla toCasilla(typename GrafoP<tCoste>::vertice v, size_t n){
+    return casilla(v/n, v%n);
+}
 
+bool esAdyacente(casilla c1, casilla c2){
+    return (abs(c1.x-c2.x) + abs(c1.y - c2.y) == 1);
+}
 
+template <typename tCoste>
+solucion laberinto(size_t n, const vector<pared> paredes, casilla cOrigen, casilla cDestino){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    vertice origen = toVertice(cOrigen);
+    vertice destino = toVertice(cDestino);
+
+    //construir y rellenar el laberinto
+    size_t N = n*n;
+    GrafoP<tCoste> laberinto(N);
+
+    for(size_t i = 0; i < N; i++){
+        for(size_t j = 0; j < N ; j++){
+            if(i == j){
+                laberinto[i][j] = 0;
+            }else if(esAdyacente(toCasilla(i), toCasilla(j))){
+                laberinto[i][j] = 1;
+            }else{
+                laberinto[i][j] = GrafoP<tCoste>::INF;
+            }
+        }
+    }
+
+    for(size_t i = 0; i < paredes.size(); i++){
+        laberinto[i.ca][i.cb] = laberinto[i.cb][i.ca] = GrafoP<tCoste>::INF;
+    }
+
+    //una vez contrustido el laberinto lo solucionamos
+    vector<Vertice> V;
+    vector<tCoste> vD;
+
+    ///camino minimo desde origen a cualquier vertice
+    vD = Dijkstra(laberinto, origen, V);
+
+    //coste del camino
+    solucion s;
+    s.coste = vD[destino];
+
+    //metemos el camino
+    Lista<vertice> lista;
+    lista = camino(origen, destino, V);
+
+    for(Lista<vertice::posicion p = lista.primera(); p != lista.fin(); p = lista.siguiente(p)){
+        s.camino.push_back(toCasilla(lsita.elemento(p)));
+    }
+
+    return s;
+}
 
 
 /*Ejericio 3: Eres el orgulloso dueño de una empresa de distribución. Tu misión radica en 
@@ -1369,15 +1434,15 @@ tCoste Grecoland_version_mejorada(const vector<ciudad> Fobos, const vector<ciuda
 
 
     //Rellenamos el super grafo, coste irectos
-    for(size_t i = 0; i <  nFobos ; i++){
-        for(size_t j = 0 ; j < nFobos ; j++){
-            sGrafo[i][j] = distancia(Fobos[i],Fobos[j]);
+    for(size_t i = 0; i < nF; i++){
+        for(size_t j = 0; j < nF; j++){
+            sGrafo[i][j] = euclidea(cFobos[i],cFobos[j]);
         }
     }
 
-    for(size_t i = 0; i <  nDeimos ; i++){
-        for(size_t j = 0 ; j < nDeimos; j++){
-            sGrafo[i][j] = distancia(Deimos[i],Deimos[j]);
+    for(size_t i = nF; i < nD; i++){
+        for(size_t j = nF; j < nD; j++){
+            sGrafo[i][j] = euclidea(cDeimos[i],cDeimos[j]);
         }
     }
 
@@ -1553,40 +1618,173 @@ matriz<tCoste> latoxica(const GrafoP<tCoste>& G, typename GrafoP<tCoste>::vertic
 }
 
 
-/*7. EN VEZ DE 2 ISLAS SON 3 ISLAS
-El archipiélago de Grecoland (Zuelandia) está formado únicamente por dos islas,
-Fobos y Deimos, que tienen N1 y N2 ciudades, respectivamente, de las cuales C1 y C2
-ciudades son costeras (obviamente C1 ≤ N1 y C2 ≤ N2 ). Se dispone de las coordenadas
-cartesianas (x, y) de todas y cada una de las ciudades del archipiélago. El huracán
-Isadore acaba de devastar el archipiélago, con lo que todas las carreteras y puentes
-construidos en su día han desaparecido. En esta terrible situación se pide ayuda a la
-ONU, que acepta reconstruir el archipiélago (es decir volver a comunicar todas las
-ciudades del archipiélago) siempre que se haga al mínimo coste.
- De cara a poder comparar costes de posibles reconstrucciones se asume lo
-siguiente:
-1. El coste de construir cualquier carretera o cualquier puente es proporcional a su
-longitud (distancia euclídea entre las poblaciones de inicio y fin de la carretera o
-del puente).
-2. Cualquier puente que se construya siempre será más caro que cualquier carretera
-que se construya.
- De cara a poder calcular los costes de VIAJAR entre cualquier ciudad del
-archipiélago se considerará lo siguiente:
-1. El coste directo de viajar, es decir de utilización de una carretera o de un puente,
-coincidirá con su longitud (distancia euclídea entre las poblaciones origen y
-destino de la carretera o del puente).
- En estas condiciones, implementa un subprograma que calcule el coste mínimo
-de viajar entre dos ciudades de Grecoland, origen y destino, después de haberse
-reconstruido el archipiélago, dados los siguientes datos:
-1. Lista de ciudades de Fobos representadas mediante sus coordenadas cartesianas.
-2. Lista de ciudades de Deimos representadas mediante sus coordenadas
-cartesianas.
-3. Lista de ciudades costeras de Fobos.
-4. Lista de ciudades costeras de Deimos.
-5. Ciudad origen del viaje.
-6. Ciudad destino del viaje.
+//--------------------------------------LABERINTO 3D------------------------------------------------------------------
+/*Se dispone de un laberinto de NxN casillas del que se conocen las casillas de entrada 
+y salida del mismo. Si te encuentras en una casilla sólo puedes moverte en las siguientes 
+cuatro direcciones (arriba, abajo, derecha, izquierda, afuera, dentro|abajo). Por otra parte, entre algunas de las 
+casillas hay una piedra que impide llegar a esa casilla.
+(en caso contrario no sería un verdadero laberinto). 
+Implementa un subprograma que dados 
+     N (dimensión del laberinto), 
+     la lista de piedras del laberinto, 
+     la casilla de entrada, y 
+     la casilla de salida, 
+calcule el camino más corto para ir de la entrada a la salida y su longitud.*/
+struct solucion{
+    tCoste coste;
+    vector<casilla> camino;
+};
+
+struct casilla{
+    size_t x,y,z;
+}
+
+bool esAdyacente(casilla c1, casilla c2){
+    return (abs(c1.x-c2.x) + abs(c1.y-c2.y) + abs(c1.z - c2.z) == 1);
+}
+
+typename GrafoP<tCoste>::vertice toVertice(casilla c, size_t n){
+    return (c.x * N + c.y + c.z * n * n );
+}
+
+casilla toCasilla(typename GrafoP<tCoste>::vertice v, size_t n){
+    return casilla(v/n, v%n, v/n/n);
+}
+
+template <typename tCoste>
+solucion laberinto3D(size_t n, vector<casilla> piedras, casilla entrada, casilla salida){
+    size_t N = n*n*n;
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    vertice origen = toVertice(entrada);
+    vertice destino = toVertice(salida);
+
+    //rellenamos el laberinto
+    GrafoP<tCoste> laberinto(N);
+
+    
+    for(size_t i = 0; i < N; i++){
+        for(size_t j = 0; j < N ; j++){
+            for(size_t k = 0; k < piedras.size(); k++){
+                if(i == j){
+                    laberinto[i][j] = 0;
+                }else if(esAdyacente(toCasilla(i,n), toCasilla(j,n))){
+                    laberinto[i][j] = 1;
+                }else if(piedras[k] == toCasilla(i,n) || piedras[k] == toCasilla(j,n)){
+                    laberinto[i][j] = laberinto[j][i] = GrafoP<tCoste>::INF;
+                }else{
+                    laberinto[i][j] = GrafoP<tCoste>::INF;
+                }
+            }
+        }
+    }
+
+    //una vez contrustido el laberinto lo solucionamos
+    vector<Vertice> V;
+    vector<tCoste> vD;
+
+    ///camino minimo desde origen a cualquier vertice
+    vD = Dijkstra(laberinto, origen, V);
+
+    //coste del camino
+    solucion s;
+    s.coste = vD[destino];
+
+    //metemos el camino
+    Lista<vertice> lista;
+    lista = camino(origen, destino, V);
+
+    for(Lista<vertice::posicion p = lista.primera(); p != lista.fin(); p = lista.siguiente(p)){
+        s.camino.push_back(toCasilla(lsita.elemento(p)));
+    }
+
+    return s;
+}
+
+
+/*Se dispone de un tablero de ajedrez de NxN casillas y la pieza del caballo de ajedrez que se encuentra en una posición inicial.
+
+El caballo puede moverse siguiendo el movimiento característico del ajedrez, es decir,
+en forma de "L". El movimiento del caballo consiste en avanzar dos casillas en una 
+dirección (horizontal o vertical) y luego girar en ángulo recto y avanzar una casilla 
+adicional. El caballo puede moverse en ocho direcciones diferentes.
+
+Implementa un subprograma que, dada:
+
+la dimensión del tablero de ajedrez,
+la casilla inicial del caballo y
+la casilla final,
+calcule el camino más corto para que el caballo llegue a la casilla final desde 
+la casilla inicial, y también determine el coste que supone.
 */
-//AJEDREZ
+struct solucion{
+    tCoste coste;
+    vector<casilla> camino;
+}
 
-//LABERINTO 2D
+struct casilla{
+    double x,y;
+};
 
-//LABERINNTO 3D
+
+typename GrafoP<tCoste>::vertice toVertice(casilla c, size_t n){
+    return c.x * n + c.y;
+}
+
+casilla toCasilla(typename GrafoP<tCoste>::vertice v, size_t n){
+    return casilla(v/n, v%n);
+}
+
+bool esMovible(casilla c1, casilla c2){
+    if(abs(c1.x-c2.x) == 1 && abs(c1.y - c2.y) == 2){
+        return true;
+    }else if(abs(c1.x-c2.x) == 2 && abs(c1.y - c2.y) == 1){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+template <typename tCoste>
+solucion laberinto(size_t n, casilla cOrigen, casilla cDestino){
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    vertice origen = toVertice(cOrigen);
+    vertice destino = toVertice(cDestino);
+
+    //construir y rellenar el laberinto
+    size_t N = n*n;
+    GrafoP<tCoste> laberinto(N);
+
+    for(size_t i = 0; i < N; i++){
+        for(size_t j = 0; j < N ; j++){
+            if(i == j){
+                laberinto[i][j] = 0;
+            }else if(esMovible(toCasilla(i), toCasilla(j))){
+                laberinto[i][j] = 1;
+            }else{
+                laberinto[i][j] = GrafoP<tCoste>::INF;
+            }
+        }
+    }
+
+    //una vez contrustido el laberinto lo solucionamos
+    vector<Vertice> V;
+    vector<tCoste> vD;
+
+    ///camino minimo desde origen a cualquier vertice
+    vD = Dijkstra(laberinto, origen, V);
+
+    //coste del camino
+    solucion s;
+    s.coste = vD[destino];
+
+    //metemos el camino
+    Lista<vertice> lista;
+    lista = camino(origen, destino, V);
+
+    for(Lista<vertice::posicion p = lista.primera(); p != lista.fin(); p = lista.siguiente(p)){
+        s.camino.push_back(toCasilla(lsita.elemento(p)));
+    }
+
+    return s;
+}
+
