@@ -1029,13 +1029,10 @@ void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
     nIslas = N;
     typedef typename Grafo::vertice vertice;
 
-    for(vertice i = 0; i < n; ++i)
-    {
-        for(vertice j = 0; j < n; ++j)
-        {   
+    for(vertice i = 0; i < n; ++i){
+        for(vertice j = 0; j < n; ++j){   
             //condicion de que exista carretera y condidicion de los representantes necesaria por la precondición de la función unir
-            if(archipielago[i][j] && p.encontrar(i) != p.encontrar(j))
-            {
+            if(archipielago[i][j] && p.encontrar(i) != p.encontrar(j)){
                 --nIslas;
                 p.unir(p.encontrar(i), p.encontrar(j));
             }
@@ -1048,13 +1045,17 @@ void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
 
 
     //Apo que va a almacenar todas las lineas posibles
-    Apo<LineaAerea> apo(LineasPosibles);
+    Apo<LineaAerea> apo(nLineas);
 
     //Rellenamos el apo con todas las lineas posibles da igual que nos valgan o no
     for(vertice i = 0; i <= N-1; i++){
         for(vertice j = 0; j <= N-1; j++){
-            linea(i, j, coste) = {i, j, distancia(i, j)};
-            apo.insertar(linea); //Inserto línea en el apo
+            int isla1 = p.encontrar(i);
+            int isla2 = p.encontrar(j);
+            if(isla1 != isla2){ //Distintas islas, necesitamos construir linea
+                linea(i, j, coste) = {i, j, distancia(i, j)};
+                apo.insertar(linea); //Inserto línea en el apo
+            }
         }
     }
     
@@ -1076,7 +1077,7 @@ void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
         //y  aumentamos el contador de las lineas actuales
         if(!mLineaNoRepetida[actual.i][actual.j]){
             vector.push_back(actual);
-            mLineaNoRepetida[actual.i][actual.j] = T
+            mLineaNoRepetida[actual.i][actual.j] = mLineaNoRepetida[actual.j][actual.i] = T;
             lineas_actual++;
         }
     }
@@ -1133,10 +1134,8 @@ void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
     nIslas = n;
     typedef typename Grafo::vertice vertice;
 
-    for(vertice i = 0; i < n; ++i)
-    {
-        for(vertice j = 0; j < n; ++j)
-        {   
+    for(vertice i = 0; i < n; ++i){
+        for(vertice j = 0; j < n; ++j){   
             //condicion de que exista carretera y condidicion de los representantes necesaria por la precondición de la función unir
             if(archipielago[i][j] && p.encontrar(i) != p.encontrar(j))
             {
@@ -1159,8 +1158,12 @@ void tombuctu2(const Grafo& archipielago, vector<isla<double> > islas)
     //Rellenamos el apo con todas las lineas posibles da igual que nos valgan o no
     for(vertice i = 0; i <= N-1; i++){
         for(vertice j = 0; j <= N-1; j++){
-            linea(i, j, coste) = {i, j, distancia(i, j)};
-            apo.insertar(linea); //Inserto línea en el apo
+            int isla1 = p.encontrar(i);
+            int isla2 = p.encontrar(j);
+            if(isla1 != isla2){ //Distintas islas, necesitamos construir linea
+                linea(i, j, coste) = {i, j, distancia(i, j)};
+                apo.insertar(linea); //Inserto línea en el apo
+            }
         }
     }
 
@@ -1268,66 +1271,74 @@ tCoste distancia(ciudad c1, ciudad c2){
     return sqrt(pow(c1.a - c2.a,2) + pow(c1.b - c2.b, 2));
 }
 
-puente puenteCosteMinimo(vector<ciudad> fobos, vector<ciudad> deimos, vector<vertice> costaFobos,
-     vector<vertice> costaDeimos)
-{
-    puente puenteMin;
-    puenteMin.fobos = 0;
-    puenteMin.deimos = 0;
-    puenteMin.coste = GrafoP<double>::INFINITO;
-    for (int i = 0; i < costaFobos.size(); ++i)
-        for (int j = 0; j < costaDeimos.size(); ++j)
-        {
-            double coste = distancia(fobos[costaFobos[i]], deimos[costaDeimos[j]]);
-            if (coste < puenteMin.coste)
-            {
-                puenteMin.coste = coste;
-                puenteMin.fobos = costaFobos[i];
-                puenteMin.deimos = costaDeimos[i];
-            }
-        }
-    return puenteMin;
-}
-
 
 template <typename tCoste>
 tCoste Grecoland(const vector<ciudad> Fobos, const vector<ciudad> Deimos, const vector<vertice> costerasFobos, 
                 const vector<vertice> costerasDeimos, vertice origen, vertice destino){
-    size_t Nf = Fobos.size();
-    size_t Nd = Deimos.size();
-    size_t  N = Nf + Nd;
+    typedef typename GrafoP<tCoste>::vertice vertice;
+    static const double INF;
 
-    GrafoP<tCoste> sGrafo (N);
-    //Carreteras de fobos
+    size_t nFobos = Fobos.size();
+    size_t nDeimos = Deimos.size();
+
+    Grafo<tCoste> gFobos(nFobos);
+    Grafo<tCoste> gDeimos(nDeimos);
+
     for(vertice i = 0; i < Nf; i++){
         for(vertice j = 0; j < Nf, j++){
-            sGrafo[i][j] = distancia(Fobos[i],Fobos[j]);
-        }
-    }
-    //Carretera de Deimos
-    for(vertice i = Nf; i < N; i++){
-        for(vertice j = Nf; j < N, j++){
-            sGrafo[i][j] = distancia(Deimos[i],Deimos[j]);
+            gFobos[i][j] = distancia(Fobos[i],Fobos[j]);
         }
     }
 
-    //Hacemos los puentes
     for(vertice i = 0; i < Nf; i++){
-        for(vertice j = Nf; j < N, j++){
-            sGrafo[i][j] = distancia(Fobos[i],Deimos[j]);
+        for(vertice j = 0; j < Nf, j++){
+            gDeimos[i][j] = distancia(Deimos[i],Deimos[j]);
         }
     }
 
+    gFobos = Kruskal(gFobos);
+    gDeimos = Kruskal(gDeimos);
 
-    puente puente = puenteCosteMinimo(Fobos, Deimos, costerasFobos, costerasDeimos);
-    archipielago[puente.fobos][puente.deimos + Fobos.size()] = archipielago[puente.deimos + Fobos.size()][puente.fobos] = puente.coste;
 
-    vector<vertice> vVer;
-    vector<double> costes = Dijkstra(archipielago, origen, vVer);
-    std::cout << costes[destino];
+    double minDistancia = INF;
+    punete p;//puente que une las islas mas corto
 
+    for(vertice i = 0 ; i < costerasFobos.size(); i ++){
+        for(vertice j = 0 ; j < costerasDeimos.size(); j ++){
+            if(distancia(Fobos[costeraFobos[i]], Deimos[costeraDeimos[j]]) < minDistancia){
+                minDistancia = distancia(Fobos[costeraFobos[i]], Deimos[costeraDeimos[j]]);
+                p.a = i;
+                p.b = j;
+                p.coste = minDistancia;
+            }
+        }
+    }
+    size_t nSuper = nFobos + nDeimos;
+    Grafo<tCoste> sGrafo(nSuper);
+
+    //Rellenamos el super grafo, coste irectos
+    for(size_t i = 0; i <  nFobos ; i++){
+        for(size_t j = 0 ; j < nFobos ; j++){
+            sGrafo[i][j] = gFobos[i][j];
+        }
+    }
+
+    for(size_t i = 0; i <  nDeimos ; i++){
+        for(size_t j = 0 ; j < nDeimos; j++){
+            sGrafo[i][j] = gDeimos[i][j];
+        }
+    }
+
+    //señalamos el puente elegido en el supergrafo 
+    sGrafo[puente.a][puente.b+nFobos] = sGrafo[puente.b+nFobos][puente.a] = p.coste;
+
+    vector<vertice> V;
+    vector<tCoste> vDjikstra;
+
+    vDjikstra = Dijkstra(sGrafo, origen, V);
+
+    return vDjikstra[destino];
 }
-
 
 
 /*Un repartidor de una empresa de distribución de bebidas tiene que visitar a todos sus
